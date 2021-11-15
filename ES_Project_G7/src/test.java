@@ -6,7 +6,7 @@ public class test {
 		System.out.println("World");
 		System.out.println("Hugo");
 		System.out.println("Hugowrwrw");
-		System.out.println("gaybriel");
+		System.out.println("gabriel");
 	}
 
 }
