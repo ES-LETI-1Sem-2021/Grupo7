@@ -5,7 +5,6 @@ public class test {
 		System.out.println("World");
 		System.out.println("Tiago");
 		System.out.println("Hugo");
-		System.out.println("Testaaaaoo do txiaguu");
 		System.out.println("Mara");
 	}
 
