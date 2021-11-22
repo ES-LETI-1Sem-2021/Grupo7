@@ -1,18 +1,15 @@
+package api;
+
 import javax.swing.JFrame;
 import java.awt.*;
 import javax.swing.*;
-
-
-
-package win_main;
-
 
 /**
  *Create Window.
  */
 
-public class Window {
-	public Window() {
+public class Win {
+	public Win() {
 		createWindow();
 	}
 	
