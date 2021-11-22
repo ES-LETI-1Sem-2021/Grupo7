@@ -13,13 +13,12 @@ public class Info {
 	private Trello trelloMvn;
 
 	
-	public Info(GitHub gitMvn, Trello trelloMvn) {
-		this.gitMvn = gitMvn;
-		this.trelloMvn = trelloMvn;
+	public Info(String gitLogin, String gitAccessToken, String rep) throws IOException {
+		connectGit(gitLogin, gitAccessToken, rep);
 	}
 	
 	/**
-	 * Get repository from GitHub.
+	 * Establish connection to GitHub.
 	 */
 	private void connectGit (String login, String accessToken, String rep) throws IOException {
 		gitMvn.getUser(login);
