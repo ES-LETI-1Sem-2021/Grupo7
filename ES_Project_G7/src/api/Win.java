@@ -1,13 +1,14 @@
 package api;	
 import java.awt.*;
+
 import javax.swing.*;
+
+
+
+
 public class Win{  
 	private JFrame frame;
 	private JTextField gitToken;
-	private JTextField trelloKey;
-	private JButton nextButton;
-	private JTextField trelloToken;
-	private JTextField trelloUser;
 	// Create a simple GUI window 
 
 	public Win() { createWindow();}
@@ -36,20 +37,9 @@ public class Win{
 		return gitToken.getText();
 	}
 
-	public String getTrelloKey() {
-		return trelloKey.getText();
-	}
-
-	public String getTrelloToken() {
-		return trelloToken.getText();
-	}
-
-	public String getTrelloUser() {
-		return trelloUser.getText();
-	}
 
 	public Window getFrame() {
 		return frame;
 	}
-
+	
 }
