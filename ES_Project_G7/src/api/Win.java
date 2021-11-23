@@ -14,9 +14,8 @@ public class Win{
 	public Win() { createWindow();}
 
 	private void createWindow() {      
-		 BorderLayout borderlayout = new BorderLayout();
 
-		    JFrame frame = new JFrame("Window");
+		   frame = new JFrame("Window");
 		    frame.setVisible(true);
 		    frame.setSize(600,400);
 		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
