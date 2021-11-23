@@ -14,24 +14,23 @@ public class Win{
 	public Win() { createWindow();}
 
 	private void createWindow() {      
-		//Create and set up the window.      
-		JFrame frame = new JFrame("Window");      
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
-		JLabel textLabel = new JLabel("Git Repository"); 
-		frame.setBounds(100, 100, 527, 403);
-		textLabel.setBounds(10, 11, 300, 37);
-		textLabel.setPreferredSize(new Dimension(300, 300));   
-		frame.getContentPane().add(textLabel); 
-		//Token github
-		gitToken =new JTextField();
-		gitToken.setText("write here your github token");
-		gitToken.setBounds(20, 59, 404, 29);
-		frame.getContentPane().add(gitToken);
-		gitToken.setColumns(10);
-		//Display the window.
-		frame.setLocationRelativeTo(null);  
-		frame.pack();    
-		frame.setVisible(true);  
+		 BorderLayout borderlayout = new BorderLayout();
+
+		    JFrame frame = new JFrame("Window");
+		    frame.setVisible(true);
+		    frame.setSize(600,400);
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		    Panel p2 = new Panel();
+		    p2.setLayout(new BorderLayout());
+		    p2.add(new Label("GitRepository"),BorderLayout.NORTH ); 
+		    p2.add(new Label("Trello"));
+		    p2.setFont(new Font("sansserif", Font.BOLD, 18));
+		    frame.add(p2);
+		
+		
+		
+		
 	}  
 	public String getGitHubToken() {
 		return gitToken.getText();
