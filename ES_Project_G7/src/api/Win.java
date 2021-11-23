@@ -21,7 +21,7 @@ public class Win{
 		textLabel.setBounds(10, 11, 300, 37);
 		textLabel.setPreferredSize(new Dimension(300, 300));   
 		frame.getContentPane().add(textLabel); 
-		//Tokengithub
+		//Token github
 		gitToken =new JTextField();
 		gitToken.setText("write here your github token");
 		gitToken.setBounds(20, 59, 404, 29);
