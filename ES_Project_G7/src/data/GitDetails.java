@@ -2,11 +2,13 @@ package data;
 
 import java.io.IOException;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+@SuppressWarnings("serial")
 public class GitDetails extends JPanel {
 	
 	private static GitDetails gitPanel;
@@ -16,14 +18,22 @@ public class GitDetails extends JPanel {
 	private String accessToken;
 	private String rep;
 	
+	
+	private GitDetails() throws IOException {
+		super();
+		setAlignmentY(BOTTOM_ALIGNMENT);
+		
+		JLabel t = new JLabel("Login GitHub");
+		add(t);
+		
+		connectGit(login, accessToken, rep);
+	}
 
-
 	
 	
 	
 	
 	
-
 	/**
 	 * Establish connection to GitHub.
 	 */

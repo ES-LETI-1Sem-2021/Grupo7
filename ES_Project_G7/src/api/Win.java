@@ -9,34 +9,35 @@ import com.julienvey.trello.Trello;
 import data.GitDetails;
 import data.TrelloDetails;
 
-public class Win{  
+public class Win extends JFrame{  
 
-	private static Win INSTANCE;
+	private static Win frame;
 
-	private JFrame frame;
-//	private JPanel gitPanel;
-//	private JPanel trelloPanel;
 	private JTextField gitToken;
 
 	/**
 	 * Create singleton of Window class.
 	 */
 	public static Win getInstance() {
-		if (INSTANCE == null)
-			INSTANCE = new Win();
-		return INSTANCE;
+		if (frame == null)
+			frame = new Win();
+		return frame;
 	}
 
 	/**
 	 * Create a simple GUI window.
 	 */
 	private Win() {      
+		super("API");
+		setSize(600,400);
 		
-		frame = new JFrame("API");
-		frame.setSize(600,400);
 		
-		frame.getContentPane().add(GitDetails.getGitPanel());
-		frame.getContentPane().add(TrelloDetails.getTrelloPanel());
+		
+		getContentPane().add(GitDetails.getGitPanel());
+		getContentPane().add(TrelloDetails.getTrelloPanel());
+		
+//		frame.getContentPane().add(GitDetails.getGitPanel());
+//		frame.getContentPane().add(TrelloDetails.getTrelloPanel());
 		
 		
 //		frame = new JFrame("Window");
@@ -54,7 +55,7 @@ public class Win{
 //		int w = JOptionPane.showConfirmDialog(null, ,
 //				GameName, JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-		frame.setVisible(true);
+		setVisible(true);
 	}  
 
 
