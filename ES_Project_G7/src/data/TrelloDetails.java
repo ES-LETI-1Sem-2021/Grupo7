@@ -1,58 +1,56 @@
 package data;
 
-import java.io.IOException;
-
 import javax.swing.*;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
 
+import definitions.TextField;
+import definitions.TextLabel;
+
 @SuppressWarnings("serial")
 public class TrelloDetails extends JPanel {
 
-	private static TrelloDetails trelloPanel;
-
 	private Trello trelloMvn;
-	private String login;
-	private String accessToken;
+//	private String login;
+//	private String accessToken;
 	//private String cardBoard;
 
-	
-	private TrelloDetails() throws IOException {
-		
-		trelloPanel = new TrelloDetails();
-		setAlignmentY(TOP_ALIGNMENT);
-		
-		JLabel t = new JLabel("Login Trello");
+	/**
+	 * 
+	 */
+	public TrelloDetails() {
+		super();		
+		//		setAlignmentY(TOP_ALIGNMENT);
+
+		TextLabel t = new TextLabel("Login Trello", 15);
 		add(t);
-		
-		connectTrello(login, accessToken);
+
+		TextField user = new TextField();
+		add(user);
+
+
+//		connectTrello(login, accessToken);
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * Establish connection to Trello.
 	 */
-	private void connectTrello (String login, String accessToken) throws IOException {
+	@SuppressWarnings("unused")
+	private void connectTrello (String login, String accessToken) {
 		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
 	}
-	
+
 	/**
 	 * Get Trello API.
 	 */
 	public Trello getTrello() {
 		return trelloMvn;
 	}
-	
-	/**
-	 * Create Trello JPanel.
-	 */
-	public static TrelloDetails getTrelloPanel()	{
-		return trelloPanel;
-	}	
 }
