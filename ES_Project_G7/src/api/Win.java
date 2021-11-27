@@ -23,7 +23,7 @@ public class Win extends JFrame{
 	 * Create singleton of Window class.
 	 * @throws IOException 
 	 */
-	public static Win getInstance() throws IOException {
+	public static Win getInstance() {
 		if (frame == null)
 			frame = new Win();
 		return frame;
@@ -31,9 +31,8 @@ public class Win extends JFrame{
 
 	/**
 	 * Create a simple GUI window.
-	 * @throws IOException 
 	 */
-	private Win() throws IOException {      
+	private Win() {      
 		super("API");
 
 		github = new GitDetails();

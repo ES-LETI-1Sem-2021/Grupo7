@@ -20,7 +20,7 @@ public class GitDetails extends JPanel {
 	/**
 	 * Create GitHub JPanel.
 	 */
-	public GitDetails() throws IOException {
+	public GitDetails() {
 		super();
 		
 		TextLabel g = new TextLabel("Login GitHub", 150);
