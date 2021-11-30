@@ -67,7 +67,7 @@ public static void win1() {
 	f.setSize(300, 300);
 
 	f.show();
-	f.setTitle("Trello");
+	f.setTitle("Github");
 	
 	
 	
@@ -91,11 +91,14 @@ public static void win2() {
 
 	// create a object of JTextField with 16 columns and a given initial text
 	t = new JTextField("enter the text", 16);
-
+	JTextField t2 = new JTextField("enter the text", 16);
+	JTextField t3 = new JTextField("enter the text", 16);
 	// create a panel to add buttons and textfield
 	JPanel p = new JPanel();
 
 	// add buttons and textfield to panel
+	p.add(t2);
+	p.add(t3);
 	p.add(t);
 	p.add(b);
 	p.add(l);
@@ -107,7 +110,7 @@ public static void win2() {
 	f.setSize(300, 300);
 
 	f.show();
-	f.setTitle("GitHub");
+	f.setTitle("Trello");
 	
 	
 	
