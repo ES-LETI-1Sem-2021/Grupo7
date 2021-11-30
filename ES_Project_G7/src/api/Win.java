@@ -21,7 +21,6 @@ public class Win extends JFrame{
 
 	/**
 	 * Create singleton of Window class.
-	 * @throws IOException 
 	 */
 	public static Win getInstance() {
 		if (frame == null)

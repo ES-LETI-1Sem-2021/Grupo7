@@ -10,7 +10,7 @@ import org.kohsuke.github.GitHubBuilder;
 import definitions.TextLabel;
 
 @SuppressWarnings("serial")
-public class GitDetails extends JPanel {
+public class GitDetails extends JPanel implements Conection {
 
 	private GitHub gitMvn;
 //	private String login;
@@ -26,25 +26,39 @@ public class GitDetails extends JPanel {
 		TextLabel g = new TextLabel("Login GitHub", 150);
 		add(g);
 
-//		connectGit(login, accessToken, rep);
+//		connectTo(login, accessToken);
 	}
+
 
 	/**
 	 * Establish connection to GitHub.
 	 * 
 	 * @throws IOException 
 	 */
-	@SuppressWarnings("unused")
-	private void connectGit (String login, String accessToken, String rep) throws IOException {
+	@Override
+	public void connectTo(String login, String accessToken) throws IOException {
 		gitMvn.getUser(login);
-		gitMvn.getRepository(login+"/"+rep);
+		gitMvn.getRepository(getRep(login));
 		gitMvn = new GitHubBuilder().withOAuthToken(accessToken, login).build();
+	}
+	
+	/**
+	 * Get GitHub repository.
+	 */
+	private String getRep(String login) {
+		String rep = "";
+		String hash = login+"/"+rep;
+		return hash;
 	}
 
 	/**
 	 * Get GitHub API.
 	 */
-	public GitHub getGitHub() {
+	@Override
+	public void getAPI() {
+		getGitHub();
+	}
+	private GitHub getGitHub() {
 		return gitMvn;
 	}
 }

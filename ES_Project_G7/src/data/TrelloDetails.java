@@ -10,7 +10,7 @@ import definitions.TextField;
 import definitions.TextLabel;
 
 @SuppressWarnings("serial")
-public class TrelloDetails extends JPanel {
+public class TrelloDetails extends JPanel implements Conection {
 
 	private Trello trelloMvn;
 //	private String login;
@@ -31,26 +31,33 @@ public class TrelloDetails extends JPanel {
 		add(user);
 
 
-//		connectTrello(login, accessToken);
+//		connectTO(login, accessToken);
 	}
-
-
-
-
-
 
 	/**
 	 * Establish connection to Trello.
 	 */
-	@SuppressWarnings("unused")
-	private void connectTrello (String login, String accessToken) {
+	@Override
+	public void connectTo(String login, String accessToken) {
 		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
 	}
 
 	/**
 	 * Get Trello API.
 	 */
-	public Trello getTrello() {
+	private Trello getTrello() {
 		return trelloMvn;
 	}
+
+	@Override
+	public void getAPI() {
+		getTrello();		
+	}
+
+
+
+
+
+
+
 }
