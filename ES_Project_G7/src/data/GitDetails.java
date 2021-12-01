@@ -23,7 +23,7 @@ public class GitDetails extends JPanel implements Conection {
 	 */
 	public GitDetails() {
 		super();
-		/*
+		
 		TextLabel g = new TextLabel("User GitHub", 150);
 		add(g);
 		TextField user = new TextField();
@@ -33,7 +33,7 @@ public class GitDetails extends JPanel implements Conection {
 		TextField user2 = new TextField();
 		add(g3);
 		add(user2);
-		*/
+		
 //		connectTo(login, accessToken);
 	}
 

@@ -27,20 +27,23 @@ public class TrelloDetails extends JPanel implements Conection {
 		//		setAlignmentY(TOP_ALIGNMENT);
 
 		TextLabel t = new TextLabel("User Trello", 150);
-		add(t);
-
+		
 		TextField user = new TextField();
-		add(user);
+		
 		TextLabel t2 = new TextLabel("Key Trello", 150);
-		add(t2);
-
+		
 		TextField user2 = new TextField();
-		add(user2);
+		
 		
 		TextLabel t23 = new TextLabel("Token Trello", 150);
-		add(t23);
+		
 
 		TextField user23 = new TextField();
+		add(t);
+		add(user);
+		add(t2);
+		add(user2);
+		add(t23);
 		add(user23);
 
 //		connectTO(login, accessToken);
@@ -52,6 +55,7 @@ public class TrelloDetails extends JPanel implements Conection {
 	 */
 	
 	public void connectTo(String login, String accessToken) {
+		
 		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
 	}
 

@@ -11,8 +11,8 @@ import data.TrelloDetails;
 public class Win extends JFrame{  
 
 	private static Win frame;
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 400;
+	private static final int WIDTH = 1100;
+	private static final int HEIGHT = 330;
 	
 	private GitDetails github;
 	private TrelloDetails trello;
