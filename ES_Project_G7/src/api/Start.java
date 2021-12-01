@@ -1,6 +1,5 @@
 package api;
 
-import java.awt.EventQueue;
 import java.io.IOException;
 
 public class Start {
