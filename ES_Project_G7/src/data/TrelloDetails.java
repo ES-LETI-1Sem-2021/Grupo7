@@ -32,7 +32,6 @@ public class TrelloDetails extends JPanel implements Conection {
 		setAlignmentY(TOP_ALIGNMENT);
 
 		TextLabel title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
-		add(title);
 		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
 		TextLabel token_lab = new TextLabel("Access Token: ", 15, FontType.FONT_BOLD);
@@ -42,7 +41,7 @@ public class TrelloDetails extends JPanel implements Conection {
 
 		Button b = new Button("Submit Trello data");
 //		add(b);
-//		add(b, BOTTOM_ALIGNMENT);
+//		add(b, RIGHT_ALIGNMENT);
 
 		TextLabel[] labels = { user_lab, token_lab, card_lab };
 		TextField[] fields = { login, accessToken, cardBoard };
