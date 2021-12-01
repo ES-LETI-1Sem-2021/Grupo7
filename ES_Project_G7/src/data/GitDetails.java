@@ -7,12 +7,14 @@ import javax.swing.*;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import api.Win;
 import definitions.TextLabel;
 
 @SuppressWarnings("serial")
 public class GitDetails extends JPanel implements Conection {
 
 	private GitHub gitMvn;
+	private static final int STARTING_POINT = 150;
 //	private String login;
 //	private String accessToken;
 //	private String rep;
@@ -20,11 +22,12 @@ public class GitDetails extends JPanel implements Conection {
 	/**
 	 * Create GitHub JPanel.
 	 */
-	public GitDetails() {
+	public GitDetails(Win window) {
 		super();
-		
+//		setAlignmentY();
+
 		TextLabel g = new TextLabel("Login GitHub", 150);
-		add(g);
+//		add(g);
 
 //		connectTo(login, accessToken);
 	}
