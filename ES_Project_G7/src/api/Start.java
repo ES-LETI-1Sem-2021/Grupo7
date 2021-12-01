@@ -1,9 +1,8 @@
 package api;
 
-import java.awt.EventQueue;
+import java.io.IOException;
 
 import java.awt.event.*;
-import java.io.IOException;
 
 import javax.swing.*;
 class Start  extends JFrame implements ActionListener {
@@ -18,4 +17,3 @@ class Start  extends JFrame implements ActionListener {
 		
 	}
 }
-

@@ -7,6 +7,7 @@ import javax.swing.*;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import api.Win;
 import definitions.TextField;
 import definitions.TextLabel;
 
@@ -21,18 +22,18 @@ public class GitDetails extends JPanel implements Conection {
 	/**
 	 * Create GitHub JPanel.
 	 */
-	public GitDetails() {
+	public GitDetails(Win win) {
 		super();
 		
 		TextLabel g = new TextLabel("User GitHub", 150);
-		add(g);
+//		add(g);
 		TextField user = new TextField();
-		add(user);	
+//		add(user);	
 		
 		TextLabel g3 = new TextLabel("Token GitHub", 150);
 		TextField user2 = new TextField();
-		add(g3);
-		add(user2);
+//		add(g3);
+//		add(user2);
 		
 //		connectTo(login, accessToken);
 	}
