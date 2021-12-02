@@ -65,33 +65,3 @@ public class Tarefa {
 	public List<Label> getLabels() {
 		return labels;
 	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-}

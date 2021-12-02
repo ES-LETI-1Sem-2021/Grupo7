@@ -38,6 +38,7 @@ public class Win extends JFrame {
 
 		setSize(WIDTH, HEIGHT);
 		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		if (page_number == 0)
 			initialize();
