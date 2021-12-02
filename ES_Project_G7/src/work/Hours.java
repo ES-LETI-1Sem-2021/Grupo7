@@ -1,27 +1,32 @@
 package work;
 
-public class Hours {
-	private String utilizador;
+import com.julienvey.trello.domain.Member;
+
+public class Hours implements Times {
+	private Member membro;
 	private double timeSpent;
-	private double timeEstimate;
-	
-	public Hours(String utilizador) {
-		this.utilizador = utilizador;
-		this.timeEstimate = 0;
+	private double timeEstimated;
+
+	public Hours(Member membro) {
+		this.membro = membro;
+		this.timeEstimated = 0;
 		this.timeSpent = 0;
-		
-		
-		
-		
-		
 	}
+
 	public String getUtilizador() {
-		return utilizador;
+		return membro.getUsername();
 	}
+
+	public boolean hasTimeSpent() {
+		return false;
+	}
+
 	public double getTimeSpent() {
 		return timeSpent;
 	}
-	public double getTimeEstimate() {
-		return timeEstimate;
+
+	public double getTimeEstimated() {
+		return timeEstimated;
 	}
+
 }
