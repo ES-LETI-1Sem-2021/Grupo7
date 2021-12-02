@@ -67,7 +67,10 @@ public class TrelloDetails extends JPanel implements Conection {
 		TextLabel[] labels = { user_lab, token_lab, card_lab };
 		TextField[] fields = { login, accessToken, cardBoard };
 
-		Layout.defineSpringLayout(window, title, labels, fields, STARTING_POINT);
+		Layout.addToSpringLayout(window, title, labels, fields, STARTING_POINT);
+
+		connectTo(this.login, this.accessToken);
+//		connectTo(login.getText(), accessToken.getText());
 	}
 	
 	/**
