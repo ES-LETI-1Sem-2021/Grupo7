@@ -36,4 +36,5 @@ public class TextField extends JTextField {
 	public String getString() {
 		return this.getString();
 	}
+	
 }
