@@ -7,6 +7,8 @@ import javax.swing.*;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import api.Win;
+import definitions.TextField;
 import definitions.TextLabel;
 
 @SuppressWarnings("serial")
@@ -20,12 +22,19 @@ public class GitDetails extends JPanel implements Conection {
 	/**
 	 * Create GitHub JPanel.
 	 */
-	public GitDetails() {
+	public GitDetails(Win win) {
 		super();
 		
-		TextLabel g = new TextLabel("Login GitHub", 150);
-		add(g);
-
+		TextLabel g = new TextLabel("User GitHub", 150);
+//		add(g);
+		TextField user = new TextField();
+//		add(user);	
+		
+		TextLabel g3 = new TextLabel("Token GitHub", 150);
+		TextField user2 = new TextField();
+//		add(g3);
+//		add(user2);
+		
 //		connectTo(login, accessToken);
 	}
 
@@ -35,7 +44,6 @@ public class GitDetails extends JPanel implements Conection {
 	 * 
 	 * @throws IOException 
 	 */
-	@Override
 	public void connectTo(String login, String accessToken) throws IOException {
 		gitMvn.getUser(login);
 		gitMvn.getRepository(getRep(login));
@@ -54,7 +62,6 @@ public class GitDetails extends JPanel implements Conection {
 	/**
 	 * Get GitHub API.
 	 */
-	@Override
 	public void getAPI() {
 		getGitHub();
 	}
