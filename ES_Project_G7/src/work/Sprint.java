@@ -2,57 +2,58 @@ package work;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.julienvey.trello.domain.Member;
 
-
-public class Sprint {
-	private List<Member> membros;
+public class Sprint implements Times {
+	private List<String> membersIDs;     // List<Member> ?
 	private String sprint;
-private List<Tarefa> listtarefa ;
+	private List<Task> listtarefa;
+
 	public Sprint(String sprint) {
 		this.sprint = sprint;
-		this.membros=new ArrayList<Member>();
-		this.listtarefa= new ArrayList<Tarefa>();
+		this.membersIDs = new ArrayList<String>();
+		this.listtarefa = new ArrayList<Task>();
 	}
 
 	public String getSprint() {
 		return sprint;
 	}
 
-	
-	public List<Tarefa> getListtarefa() {
+	public List<Task> getListtarefa() {
 		return listtarefa;
 	}
-	
-	private double getSpentTime() {
-		double timeSpent=0;
-		for (Tarefa t : this.listtarefa) {
-			if(t.hasSpentTime())
-			timeSpent +=t.getSpentTime();
+
+	private List<String> getMembersIDs() {
+		List<String> newList = new ArrayList<String>();
+		for (Task t : this.listtarefa) {
+			newList.addAll(t.getMembersIDs());
+		}
+		this.membersIDs = newList;
+		return membersIDs;
+	}
+
+	public boolean hasTimeSpent() {
+		if (getTimeSpent() == 0)
+			return false;
+		else
+			return true;
+	}
+
+	public double getTimeSpent() {
+		double timeSpent = 0;
+		for (Task t : this.listtarefa) {
+			if (t.hasTimeSpent())
+				timeSpent += t.getTimeSpent();
 		}
 		return timeSpent;
 	}
-	
-	private double getEstimateTime() {
-		double estimateTime = 0;
-		for (Tarefa t : this.listtarefa) {
-			estimateTime  += t.getEstimateTime();
+
+	public double getTimeEstimated() {
+		double estimatedTime = 0;
+		for (Task t : this.listtarefa) {
+			estimatedTime += t.getTimeEstimated();
 		}
-		return estimateTime ;
+		return estimatedTime;
 	}
-	
-	private boolean hasSpentTime() {
-		if(getSpentTime()==0) return false;
-		else return true;
-	}
-	private List<Member> getMembros () {
-		List<Member> newList = new ArrayList<Member>();
-		for (Tarefa t : this.listtarefa) {
-			newList.addAll(t.getMembros());
-		}
-		this.membros=newList;
-		return  membros;
-	}
-	
+
 }
