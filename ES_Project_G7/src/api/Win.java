@@ -64,7 +64,7 @@ public class Win extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-//		trello = new TrelloDetails(this);
+		trello = new TrelloDetails(this);
 		github = new GitDetails(this);
 
 //		add(trello, BorderLayout.NORTH);

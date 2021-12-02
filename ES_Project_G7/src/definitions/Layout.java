@@ -62,8 +62,7 @@ public class Layout {
 		Container pane = win.getContentPane();
 
 		Button b = new Button("Submit data");
-			
-		
+					
 		if (!springLayoutMade) {
 			pane.setLayout(layout);
 			springLayoutMade = true;
