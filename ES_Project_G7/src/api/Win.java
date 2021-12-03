@@ -1,16 +1,10 @@
 package api;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.swing.*;
 
-import data.GitDetails;
-import data.TrelloDetails;
-import definitions.Button;
-import definitions.Layout;
+import data.*;
+import definitions.*;
 
 @SuppressWarnings("serial")
 public class Win extends JFrame {
@@ -24,8 +18,6 @@ public class Win extends JFrame {
 
 	private GitDetails github;
 	private TrelloDetails trello;
-
-	private JTextField gitToken;
 
 	/**
 	 * Create singleton of Window class.
@@ -56,7 +48,6 @@ public class Win extends JFrame {
 
 //		add(trello, BorderLayout.NORTH);
 //		add(github);
-
 	}
 
 	/**
@@ -66,6 +57,8 @@ public class Win extends JFrame {
 	 */
 	private void initialize() throws IOException {
 		trello = new TrelloDetails(this);
+		layout.setSpringLayoutMade(true);
+		System.out.println(layout.isSpringLayoutMade());
 		github = new GitDetails(this);
 
 //		add(trello, BorderLayout.NORTH);
@@ -74,25 +67,11 @@ public class Win extends JFrame {
 	}
 
 	/**
-	 *
-	 */
-	public String getGitHubToken() {
-		return gitToken.getText();
-	}
-
-	/**
 	 * Get Window Frame.
 	 */
 	public static Win getFrame() {
 		return FRAME;
 	}
-	
-	/**
-	 * Get Window's layout.
-	 */
-//	public Layout getLayout() {
-//		return layout;
-//	}
 
 	/**
 	 * Get frame's width.

@@ -86,8 +86,6 @@ public class TrelloDetails extends JPanel implements Conection {
 
 	/**
 	 * Establish connection to Trello.
-	 * 
-	 * ERRO A VERIFICAR.
 	 */
 	@Override
 	public void connectTo() throws IOException {
