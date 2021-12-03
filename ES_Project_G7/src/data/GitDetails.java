@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.UIDefaults.ActiveValue;
 
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
@@ -21,11 +22,12 @@ import definitions.TextLabel;
 public class GitDetails extends JPanel implements Conection {
 
 	private GitHub gitMvn;
+	private GHRepository gitRepo;
 	private static final int STARTING_POINT = 150;
 	private boolean connected;
-	private String username;
-	private String accessToken;
-	private String repository;
+	private String projectOwner = "mapa95";
+	private String accessToken = "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"; // ogait
+	private String repository = "ES-LETI-1Sem-2021-Grupo7";
 
 	/**
 	 * Create GitHub JPanel.
@@ -45,24 +47,24 @@ public class GitDetails extends JPanel implements Conection {
 	 */
 	public void getData(Win window) {
 		TextLabel title = new TextLabel("Login GitHub", 15, FontType.FONT_TITLE);
-		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
-		TextField login = new TextField();
-		TextLabel token_lab = new TextLabel("Access Token: ", 15, FontType.FONT_BOLD);
-		TextField accessToken = new TextField();
+		TextLabel user_lab = new TextLabel("Project Owner: ", 15, FontType.FONT_BOLD);
+		TextField projectOwner = new TextField("Insert user name owner of the Repository...");
 		TextLabel card_lab = new TextLabel("Repository: ", 15, FontType.FONT_BOLD);
-		TextField repository = new TextField();
+		TextField repository = new TextField("Insert Repository Name..");
+		TextLabel token_lab = new TextLabel("Login (AccessToken): ", 15, FontType.FONT_BOLD);
+		TextField accessToken = new TextField("Insert your AccessToken...");
 
 //		login.addActionListener(null);;
-		
-		this.username = login.getText();
-		this.accessToken = accessToken.getText();
-		this.repository = repository.getText();
+
+//		this.projectOwner = projectOwner.getText();
+//		this.accessToken = accessToken.getText();
+//		this.repository = repository.getText();
 
 //		System.out.println(login.getText());
-//		System.out.println("User: " + username + " " + this.accessToken + " " + this.repository);
+//		System.out.println("User: " + projectOwner + " " + this.accessToken + " " + this.repository);
 
-		TextLabel[] labels = { user_lab, token_lab, card_lab };
-		TextField[] fields = { login, accessToken, repository };
+		TextLabel[] labels = { user_lab, card_lab, token_lab };
+		TextField[] fields = { projectOwner, repository, accessToken };
 
 		Layout layout = new Layout();
 		layout.addToSpringLayout(window, title, labels, fields, STARTING_POINT);
@@ -74,19 +76,30 @@ public class GitDetails extends JPanel implements Conection {
 	 * @throws IOException
 	 */
 	public void connectTo() throws IOException {
-		gitMvn.getUser(username);
-		gitMvn.getRepository(getRepName(username));
-		gitMvn = new GitHubBuilder().withOAuthToken(accessToken, username).build();
+		// gitMvn.getUser(username);
+		// gitMvn.getRepository(getRepName(username));
+		// gitMvn = new GitHubBuilder().withOAuthToken(accessToken, username).build();
+		gitMvn = new GitHubBuilder().withOAuthToken(accessToken).build();
+		gitRepo = gitMvn.getRepository(getRepository());
+		System.out.println(getProjectDescription());
 		connected = true;
 	}
 
 	/**
 	 * Get GitHub repository.
 	 */
-	private String getRepName(String login) {
-		String rep = "";
-		String hash = login + "/" + rep;
-		return hash;
+	private String getRepository() {
+		return projectOwner + "/" + repository;
+	}
+
+	/**
+	 * Get Project Description.
+	 * 
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unused")
+	private String getProjectDescription() throws IOException {
+		return gitRepo.getFileContent("README.md").getContent();
 	}
 
 	/**
@@ -100,14 +113,12 @@ public class GitDetails extends JPanel implements Conection {
 		return gitMvn;
 	}
 
-
-
 	public String getUsername() {
-		return username;
+		return projectOwner;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.projectOwner = username;
 	}
 
 	public String getAccessToken() {
@@ -136,4 +147,5 @@ public class GitDetails extends JPanel implements Conection {
 	public boolean connected() {
 		return connected;
 	}
+
 }
