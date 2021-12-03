@@ -6,9 +6,9 @@ import javax.swing.Action;
 
 import api.Win;
 
-public interface Conection extends Action{
+public interface Conection {
 	void getData(Win window);
-	void connectTo(String login, String accessToken) throws IOException;
+	void connectTo() throws IOException;
 	void getAPI();
 	boolean connected();
 }

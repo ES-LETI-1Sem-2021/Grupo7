@@ -36,7 +36,8 @@ public class GitDetails extends JPanel implements Conection {
 		super();
 		setAlignmentY(TOP_ALIGNMENT);
 		getData(window);
-//		connectTo(this.username, this.accessToken);
+		connected = false;
+		connectTo();
 	}
 
 	/**
@@ -72,10 +73,10 @@ public class GitDetails extends JPanel implements Conection {
 	 * 
 	 * @throws IOException
 	 */
-	public void connectTo(String login, String accessToken) throws IOException {
-		gitMvn.getUser(login);
-		gitMvn.getRepository(getRepName(login));
-		gitMvn = new GitHubBuilder().withOAuthToken(accessToken, login).build();
+	public void connectTo() throws IOException {
+		gitMvn.getUser(username);
+		gitMvn.getRepository(getRepName(username));
+		gitMvn = new GitHubBuilder().withOAuthToken(accessToken, username).build();
 		connected = true;
 	}
 
