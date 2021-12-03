@@ -7,12 +7,13 @@ import com.julienvey.trello.domain.Member;
 public class Sprint implements Times {
 	private List<String> membersIDs;     // List<Member> ?
 	private String sprint;
-	private List<Task> listtarefa;
+	private List<Task> taskList;
+
 
 	public Sprint(String sprint) {
 		this.sprint = sprint;
 		this.membersIDs = new ArrayList<String>();
-		this.listtarefa = new ArrayList<Task>();
+		this.taskList = new ArrayList<Task>();
 	}
 
 	public String getSprint() {
@@ -20,12 +21,12 @@ public class Sprint implements Times {
 	}
 
 	public List<Task> getListtarefa() {
-		return listtarefa;
+		return taskList;
 	}
 
 	private List<String> getMembersIDs() {
 		List<String> newList = new ArrayList<String>();
-		for (Task t : this.listtarefa) {
+		for (Task t : this.taskList) {
 			newList.addAll(t.getMembersIDs());
 		}
 		this.membersIDs = newList;
@@ -41,7 +42,7 @@ public class Sprint implements Times {
 
 	public double getTimeSpent() {
 		double timeSpent = 0;
-		for (Task t : this.listtarefa) {
+		for (Task t : this.taskList) {
 			if (t.hasTimeSpent())
 				timeSpent += t.getTimeSpent();
 		}
@@ -50,10 +51,39 @@ public class Sprint implements Times {
 
 	public double getTimeEstimated() {
 		double estimatedTime = 0;
-		for (Task t : this.listtarefa) {
+		for (Task t : this.taskList) {
 			estimatedTime += t.getTimeEstimated();
 		}
 		return estimatedTime;
+	}
+
+	@Override
+	public boolean memberhasTimeSpent(String Idmember) {
+		if (membergetTimeSpent(Idmember) == 0)
+			return false;
+		else
+			return true;
+	}
+
+	@Override
+	public double membergetTimeSpent(String Idmember) {
+		double timeSpent = 0;
+		for (Task t : this.taskList) {
+			if (t.hasTimeSpent())
+				timeSpent += t.membergetTimeSpent(Idmember);
+		}
+		return timeSpent;
+
+	}
+
+	@Override
+	public double membergetTimeEstimated(String idMember) {
+		double estimatedTime = 0;
+		for (Task t : this.taskList) {
+			estimatedTime += t.membergetTimeEstimated(idMember);
+		}
+		return estimatedTime;
+
 	}
 
 }
