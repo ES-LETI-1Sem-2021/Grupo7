@@ -1,9 +1,11 @@
 package work;
 
+import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 
-public class Hours implements Times {
+public class Hours implements MemberTimes {
 	private Member membro;
+	private Card card;
 	private double timeSpent;
 	private double timeEstimated;
 
@@ -14,19 +16,26 @@ public class Hours implements Times {
 	}
 
 	public String getUtilizador() {
-		return membro.getUsername();
+		return membro.getId();
 	}
 
-	public boolean hasTimeSpent() {
+	@Override
+	public boolean memberhasTimeSpent() {
 		return false;
 	}
 
-	public double getTimeSpent() {
+	@Override
+	public double membergetTimeSpent() {
 		return timeSpent;
 	}
 
-	public double getTimeEstimated() {
+	@Override
+	public double membergetTimeEstimated() {
 		return timeEstimated;
+	}
+
+	public String getCardId() {
+		return card.getId();
 	}
 
 }
