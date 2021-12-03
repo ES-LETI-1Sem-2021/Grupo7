@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import com.julienvey.trello.domain.Member;
 
+import timings.Times;
+
 public class Sprint implements Times {
-	private List<String> membersIDs;     // List<Member> ?
+	private List<String> membersIDs; // List<Member> ?
 	private String sprint;
 	private List<Task> taskList;
-
 
 	public Sprint(String sprint) {
 		this.sprint = sprint;

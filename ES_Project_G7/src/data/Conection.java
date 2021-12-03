@@ -4,11 +4,14 @@ import java.io.IOException;
 
 import javax.swing.Action;
 
-import api.Win;
+import gui.MainWindow;
 
 public interface Conection {
-	void getData(Win window);
+	void getData(MainWindow window);
+
 	void connectTo() throws IOException;
+
 	void getAPI();
+
 	boolean connected();
 }

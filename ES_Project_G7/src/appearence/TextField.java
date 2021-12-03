@@ -1,4 +1,4 @@
-package definitions;
+package appearence;
 
 import javax.swing.JTextField;
 
@@ -32,9 +32,9 @@ public class TextField extends JTextField {
 	public static int getFieldWidth() {
 		return COLUMNS;
 	}
-	
+
 	public String getString() {
 		return this.getString();
 	}
-	
+
 }

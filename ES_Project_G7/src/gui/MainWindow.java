@@ -1,32 +1,32 @@
-package api;
+package gui;
 
 import java.io.IOException;
 import javax.swing.*;
 
+import appearence.*;
 import data.*;
-import definitions.*;
 
 @SuppressWarnings("serial")
-public class Win extends JFrame {
+public class MainWindow extends JFrame {
 
-	private static Win FRAME;
+	private static MainWindow FRAME;
 	private Layout layout;
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;
 
 	private int page_number = 0;
 
-	private GitDetails github;
-	private TrelloDetails trello;
+	private GitConnect github;
+	private TrelloConnect trello;
 
 	/**
 	 * Create singleton of Window class.
 	 * 
 	 * @throws IOException
 	 */
-	public static Win getInstance() throws IOException {
+	public static MainWindow getInstance() throws IOException {
 		if (FRAME == null)
-			FRAME = new Win();
+			FRAME = new MainWindow();
 		return FRAME;
 	}
 
@@ -35,7 +35,7 @@ public class Win extends JFrame {
 	 * 
 	 * @throws IOException
 	 */
-	private Win() throws IOException {
+	private MainWindow() throws IOException {
 		super("API");
 
 		layout = new Layout();
@@ -56,10 +56,10 @@ public class Win extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		trello = new TrelloDetails(this);
+		trello = new TrelloConnect(this);
 		layout.setSpringLayoutMade(true);
 		System.out.println(layout.isSpringLayoutMade());
-		github = new GitDetails(this);
+		github = new GitConnect(this);
 
 //		add(trello, BorderLayout.NORTH);
 //		add(github, BorderLayout.CENTER);
@@ -69,7 +69,7 @@ public class Win extends JFrame {
 	/**
 	 * Get Window Frame.
 	 */
-	public static Win getFrame() {
+	public static MainWindow getFrame() {
 		return FRAME;
 	}
 

@@ -11,15 +11,15 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
-import api.Win;
-import definitions.Button;
-import definitions.FontType;
-import definitions.Layout;
-import definitions.TextField;
-import definitions.TextLabel;
+import appearence.Button;
+import appearence.FontType;
+import appearence.Layout;
+import appearence.TextField;
+import appearence.TextLabel;
+import gui.MainWindow;
 
 @SuppressWarnings("serial")
-public class GitDetails extends JPanel implements Conection {
+public class GitConnect extends JPanel implements Conection {
 
 	private GitHub gitMvn;
 	private GHRepository gitRepo;
@@ -34,7 +34,7 @@ public class GitDetails extends JPanel implements Conection {
 	 * 
 	 * @throws IOException
 	 */
-	public GitDetails(Win window) throws IOException {
+	public GitConnect(MainWindow window) throws IOException {
 		super();
 		setAlignmentY(TOP_ALIGNMENT);
 		getData(window);
@@ -45,7 +45,7 @@ public class GitDetails extends JPanel implements Conection {
 	/**
 	 * Get GitHub data from window frame.
 	 */
-	public void getData(Win window) {
+	public void getData(MainWindow window) {
 		TextLabel title = new TextLabel("Login GitHub", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Project Owner: ", 15, FontType.FONT_BOLD);
 		TextField projectOwner = new TextField("Insert user name owner of the Repository...");
@@ -127,21 +127,6 @@ public class GitDetails extends JPanel implements Conection {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
-	}
-
-	public Object getValue(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void putValue(String key, Object value) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean connected() {
