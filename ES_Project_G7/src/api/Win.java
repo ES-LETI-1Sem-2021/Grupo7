@@ -46,6 +46,7 @@ public class Win extends JFrame {
 	private Win() throws IOException {
 		super("API");
 
+		layout = new Layout();
 		setSize(WIDTH, HEIGHT);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,7 +69,7 @@ public class Win extends JFrame {
 		github = new GitDetails(this);
 
 //		add(trello, BorderLayout.NORTH);
-		add(github, BorderLayout.CENTER);
+//		add(github, BorderLayout.CENTER);
 
 	}
 
@@ -85,6 +86,13 @@ public class Win extends JFrame {
 	public static Win getFrame() {
 		return FRAME;
 	}
+	
+	/**
+	 * Get Window's layout.
+	 */
+//	public Layout getLayout() {
+//		return layout;
+//	}
 
 	/**
 	 * Get frame's width.

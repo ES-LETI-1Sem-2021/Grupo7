@@ -32,10 +32,12 @@ public class Layout {
 			int startingPoint) {
 		
 		Container pane = win.getContentPane();
-
+System.out.println(springLayoutMade);
+		
 		if (!springLayoutMade) {
 			pane.setLayout(layout);
 			springLayoutMade = true;
+			System.out.println(springLayoutMade);
 		}
 		pane.add(title);
 		layout.putConstraint(SpringLayout.WEST, title, 0, SpringLayout.WEST, pane);

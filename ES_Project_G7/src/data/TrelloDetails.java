@@ -1,6 +1,8 @@
 package data;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,28 +32,35 @@ public class TrelloDetails extends JPanel implements Conection {
 
 	private Trello trelloMvn;
 	private static final int STARTING_POINT = 0;
+	private boolean connected;
+
 //	private String login;
 //	private String accessToken;
+
+	// Key & AccessToken - Tiago
 	private String login = "61d79cb5bcc75c155c7fd74aef6f1b4f";
 	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-	// private String cardBoard;
+	private String boardName = "ES Project";
+
+	private List<Member> members;
 
 	/**
+	 * @throws IOException
 	 * 
 	 */
-	public TrelloDetails(Win window) {
+	public TrelloDetails(Win window) throws IOException {
 		super();
 		setAlignmentY(TOP_ALIGNMENT);
+		members = new ArrayList<Member>();
 		getData(window);
-		connectTo(this.login, this.accessToken);
-//		connectTo(login.getText(), accessToken.getText());
-
+		connected = false;
+		connectTo();
 	}
 
 	/**
 	 * Get Trello data from window frame.
 	 */
-	private void getData(Win window) {
+	public void getData(Win window) {
 		TextLabel title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
@@ -60,48 +69,30 @@ public class TrelloDetails extends JPanel implements Conection {
 		TextLabel card_lab = new TextLabel("CardBoard: ", 15, FontType.FONT_BOLD);
 		TextField cardBoard = new TextField();
 
-		Button b = new Button("Submit Trello data");
+//		Button b = new Button("Submit Trello data");
 //		add(b);
 //		add(b, RIGHT_ALIGNMENT);
+
+//		this.login = login.getText();
+//		this.accessToken = accessToken.getText();
+//		this.boardName = cardBoard.getText();
 
 		TextLabel[] labels = { user_lab, token_lab, card_lab };
 		TextField[] fields = { login, accessToken, cardBoard };
 
-		Layout.addToSpringLayout(window, title, labels, fields, STARTING_POINT);
-
-		connectTo(this.login, this.accessToken);
-//		connectTo(login.getText(), accessToken.getText());
+		Layout layout = new Layout();
+		layout.addToSpringLayout(window, title, labels, fields, STARTING_POINT);
 	}
-	
+
 	/**
 	 * Establish connection to Trello.
 	 * 
 	 * ERRO A VERIFICAR.
 	 */
-	public void connectTo(String login, String accessToken) {
-		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient() {
-			
-			public <T> T putForObject(String url, Object body, Class<T> responseType, String... params) {
-				return null;
-			}
-			
-			public <T> T postForObject(String url, Object body, Class<T> responseType, String... params) {
-				return null;
-			}
-			
-			public URI postForLocation(String url, Object body, String... params) {
-				return null;
-			}
-			
-			public <T> T get(String url, Class<T> responseType, String... params) {
-				return null;
-			}
-			
-			public <T> T delete(String url, Class<T> responseType, String... params) {
-				return null;
-			}
-		});
-		getMembers();
+	@Override
+	public void connectTo() throws IOException {
+		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
+		getMembers(boardName);
 	}
 
 	/**
@@ -114,20 +105,21 @@ public class TrelloDetails extends JPanel implements Conection {
 	/**
 	 * Get members from Trello Board.
 	 */
-	public void getMembers() {
-		Board board;
+	public void getMembers(String boardName) {
+		Board board = new Board();
+		board.setName(boardName);
 //		Member host = trelloMvn.getMemberInformation(login);
-		List<Board> member = trelloMvn.getMemberBoards("me", new Argument("fields", "name")); 
-		for (Board quadro : member) {
-			System.out.println(quadro.getName() + "-" + quadro.getId());
-			board = trelloMvn.getBoard(quadro.getId());
-			List <Membership> boardMembers = board.getMemberships();
-			ArrayList <Member> members = new ArrayList<Member>();
-			for (Membership ms : boardMembers) {
-				Member m = new Member();
-				m.setId(ms.getId());
-				System.out.println(m.getEmail());
-				members.add(m);
+		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
+		for (Board bd : allBoards) {
+			if (bd.getName() == boardName) {
+				board = trelloMvn.getBoard(bd.getId());
+				List<Membership> boardMembers = board.getMemberships();
+				for (Membership ms : boardMembers) {
+					Member m = new Member();
+					m.setId(ms.getId());
+					System.out.println(m.getEmail());
+					members.add(m);
+				}
 			}
 //			List<TList> lists = board.fetchLists();
 //			for (TList lista : lists) {
@@ -140,24 +132,29 @@ public class TrelloDetails extends JPanel implements Conection {
 		getTrello();
 	}
 
-	//apenas teste!
-	public static void main(String[] args) {
-		//TrelloDetails td = new TrelloDetails(null);
-		Trello trelloApi = new TrelloImpl("61d79cb5bcc75c155c7fd74aef6f1b4f", "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118", new ApacheHttpClient());
-		//List <Board> b = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
-		List <Board> boards = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
-		for (Board board : boards) {
-		    board.getName();
-		    board.getId();
-		    System.out.println(board.getId() + ":" + board.getName());
-		    List <TList> lists = trelloApi.getBoardLists(board.getId());
-		    for (TList list : lists) {
-		        System.out.println(list.getId() + ":" + list.getName());
-		        List <Card> cards = trelloApi.getListCards(list.getId());
-		        for (Card card : cards) {
-		            System.out.println(card.getId() + ":" + card.getName());
-		        }
-		    }
-		}
+	@Override
+	public boolean connected() {
+		return connected;
 	}
+
+//	//apenas teste!
+//	public static void main(String[] args) {
+//		//TrelloDetails td = new TrelloDetails(null);
+//		Trello trelloApi = new TrelloImpl("61d79cb5bcc75c155c7fd74aef6f1b4f", "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118", new ApacheHttpClient());
+//		//List <Board> b = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
+//		List <Board> boards = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
+//		for (Board board : boards) {
+//		    board.getName();
+//		    board.getId();
+//		    System.out.println(board.getId() + ":" + board.getName());
+//		    List <TList> lists = trelloApi.getBoardLists(board.getId());
+//		    for (TList list : lists) {
+//		        System.out.println(list.getId() + ":" + list.getName());
+//		        List <Card> cards = trelloApi.getListCards(list.getId());
+//		        for (Card card : cards) {
+//		            System.out.println(card.getId() + ":" + card.getName());
+//		        }
+//		    }
+//		}
+//	}
 }
