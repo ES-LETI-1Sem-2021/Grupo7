@@ -6,30 +6,30 @@ import java.util.List;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 
-import dates.Date;
+import timings.Date;
+import timings.Times;
 
 public abstract class CardFunctions implements Times {
-	
+
 	private Card card;
 	private Date dueDate;
 	private List<Label> labelList;
-	private List<String> membersIDs;     // List<Member> ?
+	private List<String> membersIDs; // List<Member> ?
 
 	private double timeSpent;
 	private double timeEstimated;
-	
+
 	public CardFunctions() {
 		this.setLabelList(new ArrayList<Label>());
 	}
-	
+
 	public CardFunctions(Card card) {
 		this.setCard(card);
 		this.setLabelList(card.getLabels());
-		this.setMembersIDs(card.getIdMembers()); //--------> obter Membros associado
-		this.setDueDate((Date)card.getDue());
+		this.setMembersIDs(card.getIdMembers()); // --------> obter Membros associado
+		this.setDueDate((Date) card.getDue());
 	}
 
-	
 	@Override
 	public boolean hasTimeSpent() {
 		if (getTimeSpent() == 0)
@@ -62,8 +62,7 @@ public abstract class CardFunctions implements Times {
 	public double membergetTimeEstimated(String idMember) {
 		return 0;
 	}
-	
-	
+
 	/* GETTERS & SETTERS */
 
 	public Card getCard() {

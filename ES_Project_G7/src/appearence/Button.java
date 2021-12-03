@@ -1,4 +1,4 @@
-package definitions;
+package appearence;
 
 import javax.swing.Icon;
 import javax.swing.JButton;

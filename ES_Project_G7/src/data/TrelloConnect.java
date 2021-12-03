@@ -20,15 +20,15 @@ import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
 
-import api.Win;
-import definitions.Button;
-import definitions.FontType;
-import definitions.Layout;
-import definitions.TextField;
-import definitions.TextLabel;
+import appearence.Button;
+import appearence.FontType;
+import appearence.Layout;
+import appearence.TextField;
+import appearence.TextLabel;
+import gui.MainWindow;
 
 @SuppressWarnings("serial")
-public class TrelloDetails extends JPanel implements Conection {
+public class TrelloConnect extends JPanel implements Conection {
 
 	private Trello trelloMvn;
 	private static final int STARTING_POINT = 0;
@@ -48,7 +48,7 @@ public class TrelloDetails extends JPanel implements Conection {
 	 * @throws IOException
 	 * 
 	 */
-	public TrelloDetails(Win window) throws IOException {
+	public TrelloConnect(MainWindow window) throws IOException {
 		super();
 		setAlignmentY(TOP_ALIGNMENT);
 		members = new ArrayList<Member>();
@@ -60,7 +60,7 @@ public class TrelloDetails extends JPanel implements Conection {
 	/**
 	 * Get Trello data from window frame.
 	 */
-	public void getData(Win window) {
+	public void getData(MainWindow window) {
 		TextLabel title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();

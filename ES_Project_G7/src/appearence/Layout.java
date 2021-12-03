@@ -1,9 +1,9 @@
-package definitions;
+package appearence;
 
 import java.awt.*;
 import javax.swing.*;
 
-import api.Win;
+import gui.MainWindow;
 
 public class Layout {
 
@@ -17,9 +17,9 @@ public class Layout {
 		layout = new SpringLayout();
 	}
 
-	public void addToSpringLayout(Win win, TextLabel title, TextLabel[] labels, TextField[] textFields,
+	public void addToSpringLayout(MainWindow win, TextLabel title, TextLabel[] labels, TextField[] textFields,
 			int startingPoint) {
-		
+
 		Container pane = win.getContentPane();
 		System.out.println("layoutMade antes da if-statement: " + layoutMade);
 
@@ -28,7 +28,7 @@ public class Layout {
 			layoutMade = true;
 			System.out.println("layoutMade if-statement: " + layoutMade);
 		}
-		
+
 		pane.add(title);
 		layout.putConstraint(SpringLayout.WEST, title, 0, SpringLayout.WEST, pane);
 		layout.putConstraint(SpringLayout.NORTH, title, startingPoint, SpringLayout.NORTH, pane);
@@ -44,19 +44,17 @@ public class Layout {
 
 			startingPoint += 25;
 		}
-		
+
 //		pane.add(title);
 //		for (int det = 0; det < labels.length; det++) {
 //			pane.add(labels[det]);
 //			pane.add(textFields[det]);
 //			startingPoint += 25;
 //		}
-		
-
 
 	}
 
-	public void addButton(Win win) {
+	public void addButton(MainWindow win) {
 	}
 
 	public Layout getLayout() {

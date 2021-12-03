@@ -1,4 +1,4 @@
-package work;
+package timings;
 
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;

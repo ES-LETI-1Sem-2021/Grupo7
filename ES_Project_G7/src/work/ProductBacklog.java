@@ -8,11 +8,11 @@ import com.julienvey.trello.domain.Label;
 
 public class ProductBacklog extends CardFunctions {
 
-	private List<Task> taskList ;
+	private List<Task> taskList;
 
 	public ProductBacklog() {
 		super();
-		this.taskList= new ArrayList<Task>();
+		this.taskList = new ArrayList<Task>();
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class ProductBacklog extends CardFunctions {
 				timeSpent += t.getTimeSpent();
 		}
 		return timeSpent;
-	}	
+	}
 
 	@Override
 	public double getTimeEstimated() {
@@ -52,6 +52,7 @@ public class ProductBacklog extends CardFunctions {
 		return timeSpent;
 
 	}
+
 	@Override
 	public double membergetTimeEstimated(String idMember) {
 		double estimatedTime = 0;
