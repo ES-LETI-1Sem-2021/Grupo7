@@ -26,8 +26,10 @@ public class MainWindow extends JFrame {
 
 	private int page_number = 0;
 
-	private GitConnectBackup github;
-	private TrelloConnectBackup trello;
+//	private GitConnectBackup github;
+//	private TrelloConnectBackup trello;
+	private TrelloConnect trello;
+	private GitConnect github;
 
 	/**
 	 * Create singleton of Window class.
@@ -63,8 +65,14 @@ public class MainWindow extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		trello = new TrelloConnectBackup(this);
-//		github = new GitConnect(this);
+//		trello = new TrelloConnectBackup(this);
+//		github = new GitConnectBackup(this);
+		
+		trello = new TrelloConnect(this.getContentPane(), false);
+		github = new GitConnect(trello.getLayout().getPanel(), false);
+		
+//		github = new GitConnect(this.getContentPane(), false);
+//		trello = new TrelloConnect(github.getLayout().getPanel(), false);
 		
 		Button button = new Button("LOGIN");
 		

@@ -8,13 +8,13 @@ public enum LayoutType {
 	LAYOUT_GRID(new GridLayout()),
 	LAYOUT_BORDER(new BorderLayout());
 
-	private Object layout;
+	private LayoutManager layout;
 	
-	LayoutType(Object layoutType) {
+	LayoutType(LayoutManager layoutType) {
 		this.layout = layoutType;
 	}
 	
-	public LayoutType getLayout() {
-		return (LayoutType) layout;
+	public LayoutManager getLayout() {
+		return layout;
 	}
 }

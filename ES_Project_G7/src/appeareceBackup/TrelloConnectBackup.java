@@ -41,7 +41,7 @@ public class TrelloConnectBackup implements Connection {
 //	private String accessToken;
 
 	// Key & AccessToken - Tiago
-	private String login = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
 	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
 	private String boardName = "ES Project";
 	private String boardID = "614de795e5e8b75fb65a9cdc";
@@ -83,7 +83,7 @@ public class TrelloConnectBackup implements Connection {
 	 */
 	@Override
 	public void connectTo() throws IOException {
-		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
+		trelloMvn = new TrelloImpl(accessKey, accessToken, new ApacheHttpClient());
 		getMembers(boardName);
 		connected = true;
 	}

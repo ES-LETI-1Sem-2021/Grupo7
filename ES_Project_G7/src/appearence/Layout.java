@@ -6,108 +6,97 @@ import javax.swing.*;
 
 import gui.MainWindow;
 
+@SuppressWarnings("serial")
 public class Layout extends JPanel {
 
 	private LayoutType layoutType;
 	private Object layout;
 	private Container pane;
+	private LayoutManager layMan;
 
 	private boolean layoutMade;
-	private boolean springLayout;
-	private boolean gridLayout;
-	private boolean borderLayout;
 
+	private static final int LEFT_SPACE = 5;
+	private static final int SPACE_TO_FIELD = 150;
 	private static final int GAP = 5;
 
-	/**
-	 * Create JPanel with SpringLayout.
-	 */
-	public Layout(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
+	public Layout(LayoutType layoutType, Container pane, TextLabel title, TextLabel[] labels, TextField[] textFields,
 			int startingPoint) {
-		super(getLayoutManager(layoutType), true);
-		pane = window.getContentPane();
-
-		if (layoutType == LayoutType.LAYOUT_SPRING) {
-			layout = new SpringLayout();
-			verifyLayout();
-			addToSpringLayout(title, labels, textFields, startingPoint);
-		} else if (layoutType == LayoutType.LAYOUT_GRID) {
-			layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
-			verifyLayout();
-			addToGridLayout(title, labels, textFields, startingPoint);
-		} else 
-			throw new NullPointerException("Wrong Layout.");
+		super(layoutType.getLayout(), true);
+		this.pane = pane;
+		this.layoutType = layoutType;
+		layoutMade = false;
+		addToLayout(title, labels, textFields, startingPoint);
 	}
 
-	/**
-	 * Create JPanel with BorderLayout.
-	 */
-	public Layout(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
-			String constraints) {
-		super(getLayoutManager(layoutType), true);
-		pane = window.getContentPane();
+	public Layout(Layout layout, TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
+		this.pane = layout.getPane();
+		this.layoutType = layout.getLayoutType();
+		layoutMade = true;
+		addToLayout(title, labels, textFields, startingPoint);
+	}
 
-		if (layoutType == LayoutType.LAYOUT_BORDER) {
-			layout = new BorderLayout(GAP, GAP);
-			verifyLayout();
-			addToBorderLayout(title, labels, textFields, constraints);
+	public void addToLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
+		if (layoutType == LayoutType.LAYOUT_SPRING) {
+			if (!layoutMade) {
+				this.layout = new SpringLayout();
+				System.out.println("Este layout não estava feito.");
+				layoutMade = true;
+			} else {
+				this.layout = layoutType.getLayout();
+				System.out.println("Este layout estava feito.");
+			}
+			pane.setLayout((LayoutManager) this.layout);
+			System.out.println("Pane layout: " + pane.getLayout());
+			addToSpringLayout(title, labels, textFields, startingPoint);
+		} else if (layoutType == LayoutType.LAYOUT_GRID) {
+			if (!layoutMade) {
+				this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
+				pane.setLayout((LayoutManager) this.layout);
+				layoutMade = true;
+			}
 		} else
 			throw new NullPointerException("Wrong Layout.");
 	}
-	
-	private static LayoutManager getLayoutManager(LayoutType layoutType) {
-		if (layoutType == LayoutType.LAYOUT_SPRING)
-			return new SpringLayout();
-		else if (layoutType == LayoutType.LAYOUT_GRID)
-			return new GridLayout();
-		else if (layoutType == LayoutType.LAYOUT_BORDER)
-			return new BorderLayout();
-		else
-			throw new NullPointerException("Wrong Layout.");
-	}
 
-	private void verifyLayout() {
-		if (!layoutMade) {
-			pane.setLayout((LayoutManager) layout);
-			layoutMade = true;
-		}
-	}
+	/* SPRINGLAYOUT */
 
-	private void addToSpringLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
+	//private?
+	public void addToSpringLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
 		pane.add(title);
-		((SpringLayout) layout).putConstraint(SpringLayout.WEST, title, 0, SpringLayout.WEST, pane);
-		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, title, startingPoint, SpringLayout.NORTH, pane);
+		putConstraintSL(title, pane, LEFT_SPACE, startingPoint);
 
-		for (int det = 0; det < labels.length; det++) {
-			pane.add(labels[det]);
-			((SpringLayout) layout).putConstraint(SpringLayout.WEST, labels[det], 0, SpringLayout.WEST, pane);
-			((SpringLayout) layout).putConstraint(SpringLayout.NORTH, labels[det], startingPoint + 35,
-					SpringLayout.NORTH, pane);
-
-			pane.add(textFields[det]);
-			((SpringLayout) layout).putConstraint(SpringLayout.WEST, textFields[det], 10, SpringLayout.EAST,
-					labels[det]);
-			((SpringLayout) layout).putConstraint(SpringLayout.NORTH, textFields[det], 0, SpringLayout.NORTH,
-					labels[det]);
+		for (int obj = 0; obj < labels.length; obj++) {
+			pane.add(labels[obj]);
+			putConstraintSL(labels[obj], pane, LEFT_SPACE, startingPoint + 35);
+			pane.add(textFields[obj]);
+			putConstraintSL(textFields[obj], pane, LEFT_SPACE + SPACE_TO_FIELD, startingPoint + 35);
 
 			startingPoint += 25;
 		}
 	}
 
-	private void addToGridLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
-		pane.add(title);
-		for (int det = 0; det < labels.length; det++) {
-			pane.add(labels[det]);
-			pane.add(textFields[det]);
-			startingPoint += 25;
-		}
+	private void putConstraintSL(Component comp, Component reference, int x, int y) {
+		((SpringLayout) layout).putConstraint(SpringLayout.WEST, comp, x, SpringLayout.WEST, reference);
+		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, comp, y, SpringLayout.NORTH, reference);
+	}
+
+	/* GETTERS & SETTERS */
+
+	public Container getPane() {
+		return pane;
+	}
+
+	public LayoutType getLayoutType() {
+		return layoutType;
+	}
+
+	public boolean isLayoutMade() {
+		return layoutMade;
 	}
 	
-	private void addToBorderLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, String constraints) {
-		pane.add(title, constraints);
-		for (int det = 0; det < labels.length; det++) {
-			pane.add(labels[det], BorderLayout.AFTER_LAST_LINE);
-			pane.add(textFields[det], BorderLayout.EAST);
-		}
+	public Layout getPanel() {
+		return this;
 	}
+
 }
