@@ -1,12 +1,16 @@
-package appearence;
+package appeareceBackup;
 
 import java.awt.*;
+import java.rmi.activation.ActivationGroupID;
 
 import javax.swing.*;
 
+import appearence.LayoutType;
+import appearence.TextField;
+import appearence.TextLabel;
 import gui.MainWindow;
 
-public class Layout extends JPanel {
+public class LayoutBackup extends JPanel {
 
 	private LayoutType layoutType;
 	private Object layout;
@@ -22,7 +26,7 @@ public class Layout extends JPanel {
 	/**
 	 * Create JPanel with SpringLayout.
 	 */
-	public Layout(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
+	public LayoutBackup(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
 			int startingPoint) {
 		super(getLayoutManager(layoutType), true);
 		pane = window.getContentPane();
@@ -39,10 +43,7 @@ public class Layout extends JPanel {
 			throw new NullPointerException("Wrong Layout.");
 	}
 
-	/**
-	 * Create JPanel with BorderLayout.
-	 */
-	public Layout(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
+	public LayoutBackup(LayoutType layoutType, MainWindow window, TextLabel title, TextLabel[] labels, TextField[] textFields,
 			String constraints) {
 		super(getLayoutManager(layoutType), true);
 		pane = window.getContentPane();

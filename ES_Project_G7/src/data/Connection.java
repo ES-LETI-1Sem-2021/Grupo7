@@ -6,7 +6,7 @@ import javax.swing.Action;
 
 import gui.MainWindow;
 
-public interface Conection {
+public interface Connection {
 	void getData(MainWindow window);
 
 	void connectTo() throws IOException;
