@@ -3,33 +3,49 @@ package work;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
+import com.julienvey.trello.domain.Member;
 
 import timings.Date;
 import timings.Times;
 
 public abstract class CardFunctions implements Times {
-
+	//iniciar trello;
+	Trello trello;
 	private Card card;
 	private Date dueDate;
 	private List<Label> labelList;
 	private List<String> membersIDs; // List<Member> ?
-
+	private List<Card> tasklist;
 	private double timeSpent;
 	private double timeEstimated;
 
 	public CardFunctions() {
-		this.setLabelList(new ArrayList<Label>());
+		setbacklogtasklist(tasklist);
+		for (Card c : tasklist) {
+			this.setCard((trello.getCard(c.getId())));
+			this.setLabelList((trello.getCard(c.getId())));
+			this.setMembersIDs((trello.getCard(c.getId()))); 
+			this.setDueDate((Date) (trello.getCard(c.getId())).getDue());;
+		
+		}
 	}
+
+
 
 	public CardFunctions(Card card) {
 		this.setCard(card);
-		this.setLabelList(card.getLabels());
-		this.setMembersIDs(card.getIdMembers()); // --------> obter Membros associado
+		this.setLabelList(card);
+		this.setMembersIDs(card); // --------> obter Membros associado
 		this.setDueDate((Date) card.getDue());
 	}
-
+	/////descobrir funcao pa obter lista de tarefas do backlog
+	private void setbacklogtasklist(List<Card> tasklist) {
+		//ver comando lista tasks productbacklog pra ja fica este
+		tasklist= new ArrayList<> ();
+	}
 	@Override
 	public boolean hasTimeSpent() {
 		if (getTimeSpent() == 0)
@@ -65,12 +81,10 @@ public abstract class CardFunctions implements Times {
 
 	/* GETTERS & SETTERS */
 
-	public Card getCard() {
-		return card;
-	}
+
 
 	public void setCard(Card card) {
-		this.card = card;
+		card =trello.getCard(card.getId());
 	}
 
 	public Date getDueDate() {
@@ -85,15 +99,21 @@ public abstract class CardFunctions implements Times {
 		return labelList;
 	}
 
-	public void setLabelList(List<Label> labelList) {
-		this.labelList = labelList;
-	}
+	public void setLabelList(Card card) {
+		this.labelList = trello.getBoardLabels(card.getIdBoard());
 
+	}
+	public Card getCard() {
+		return	card;
+	}
 	public List<String> getMembersIDs() {
-		return membersIDs;
+
+		return this.membersIDs;
 	}
 
-	public void setMembersIDs(List<String> membersIDs) {
-		this.membersIDs = membersIDs;
+	public void setMembersIDs(Card card) {
+		for(Member m:trello.getOrganizationMembers(card.getId())){
+			this.membersIDs.add(m.getId());
+		}
 	}
 }

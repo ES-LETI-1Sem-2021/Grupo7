@@ -2,32 +2,40 @@ package work;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.julienvey.trello.Trello;
+import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 
 import timings.Times;
 
 public class Sprint implements Times {
+	private Trello trello=null ;
 	private List<String> membersIDs; // List<Member> ?
 	private String sprint;
-	private List<Task> taskList;
+	private List<Card> taskList;
 
 	public Sprint(String sprint) {
 		this.sprint = sprint;
 		this.membersIDs = new ArrayList<String>();
-		this.taskList = new ArrayList<Task>();
+		this.taskList = new ArrayList<Card>();
+		//iniciar trello
 	}
 
 	public String getSprint() {
 		return sprint;
 	}
 
-	public List<Task> getListtarefa() {
+	public List<Card> getListtarefa() {
 		return taskList;
 	}
 
 	private List<String> getMembersIDs() {
+
+		taskList=trello.getListCards(getSprint());
 		List<String> newList = new ArrayList<String>();
-		for (Task t : this.taskList) {
+		for (Card c : this.taskList) {
+			Task t= new Task (c);
 			newList.addAll(t.getMembersIDs());
 		}
 		this.membersIDs = newList;
@@ -43,7 +51,8 @@ public class Sprint implements Times {
 
 	public double getTimeSpent() {
 		double timeSpent = 0;
-		for (Task t : this.taskList) {
+		for (Card c : this.taskList) {
+			Task t=new Task (c);
 			if (t.hasTimeSpent())
 				timeSpent += t.getTimeSpent();
 		}
@@ -52,36 +61,39 @@ public class Sprint implements Times {
 
 	public double getTimeEstimated() {
 		double estimatedTime = 0;
-		for (Task t : this.taskList) {
+		for (Card c: this.taskList) {
+			Task t= new Task (c);
 			estimatedTime += t.getTimeEstimated();
 		}
 		return estimatedTime;
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String Idmember) {
-		if (membergetTimeSpent(Idmember) == 0)
+	public boolean memberhasTimeSpent(String memberUsername) {
+		if (membergetTimeSpent(memberUsername) == 0)
 			return false;
 		else
 			return true;
 	}
 
 	@Override
-	public double membergetTimeSpent(String Idmember) {
+	public double membergetTimeSpent(String memberUsername) {
 		double timeSpent = 0;
-		for (Task t : this.taskList) {
+		for (Card c: this.taskList) {
+			Task t= new Task (c);
 			if (t.hasTimeSpent())
-				timeSpent += t.membergetTimeSpent(Idmember);
+				timeSpent += t.membergetTimeSpent(memberUsername);
 		}
 		return timeSpent;
 
 	}
 
 	@Override
-	public double membergetTimeEstimated(String idMember) {
+	public double membergetTimeEstimated(String memberUsername) {
 		double estimatedTime = 0;
-		for (Task t : this.taskList) {
-			estimatedTime += t.membergetTimeEstimated(idMember);
+		for (Card c: this.taskList) {
+			Task t= new Task (c);
+			estimatedTime += t.membergetTimeEstimated(memberUsername);
 		}
 		return estimatedTime;
 

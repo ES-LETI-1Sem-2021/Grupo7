@@ -14,22 +14,23 @@ import timings.Date;
 import timings.Hours;
 
 public class Task extends CardFunctions {
+	
+	private Trello trello = null;
 	private Hours hour;
+	private Member membro = null;
 	private List<Hours> cardhoursList;
-	private List<Hours> memberhoursList;// ver como obter lista de horas
-	private List<String> membersUsernames;
-	// private Map<Member,Hours> timeSpentPerMember = new HashMap<>();
+	private List<Hours> memberhoursList;
+	private List<Hours> cardhoursListestimadas;
+	private List<Hours> memberhoursListestimadas;
 
 	public Task(Card card) {
 		super(card);
-		// this.hours = ; -------------------------------> obter horas do TrelloPlus
-		// this.membersUsernames = ; --------------------> lista de membros por username
+		//iniciar trello
+		
 	}
 
-	
-	public Member obtermembrodocardpeloUsername(String id,Card card) {
-		Trello trello = null;
-		Member membro = null;
+
+	public Member getmembrodocardpeloUsername(String id,Card card) {
 		for(Member m:	trello.getCardMembers(card.getId()) ){
 			if (m.getId().equals(id)){
 				membro=m;
@@ -38,10 +39,9 @@ public class Task extends CardFunctions {
 		return membro;
 	}
 	public void getCardHoursList(Card card) {
-		Trello trello = null;
 		List<String> membros=trello.getCard(card.getId()).getIdMembers();
 		for(String id:	membros) {
-		String memberUsername=obtermembrodocardpeloUsername(id,card).getUsername();
+			String memberUsername=getmembrodocardpeloUsername(id,card).getUsername();
 			hour.setMember(trello.getMemberInformation(memberUsername),trello.getCard(card.getId()));
 			cardhoursList.add(hour);
 		}}
@@ -57,9 +57,17 @@ public class Task extends CardFunctions {
 		}
 		return timeSpent;
 	}
-
+	
+	
+	//////////////////////////////////////////////////////////////////
+     ///////public void getCardHoursListestimated(this.getCard(Card card) {}
+	
+	
+	
+	
 	@Override
 	public double getTimeEstimated() {
+		///////getCardHoursListestimated(this.getCard());
 		double estimatedTime = 0;
 		for (Hours h : cardhoursList) {
 			if (h.getCardId().equals(this.getCard().getId()))
@@ -74,13 +82,6 @@ public class Task extends CardFunctions {
 
 
 
-	public List<String> getMembersUsernames() { // -----> Resolver problema de listagem: deveria ser de <Member> e não
-		// de <String>
-		// for (String t : membersIDs) {
-		// membersUsernames.add(t.getUsername());
-		// }
-		return membersUsernames;
-	}
 
 	@Override
 	public boolean memberhasTimeSpent(String memberUsername) {
@@ -89,9 +90,9 @@ public class Task extends CardFunctions {
 		else
 			return false;
 	}
-	
+
 	public void getHoursList(String memberUsername,Card card) {
-		Trello trello = null;
+
 		for(String id:	trello.getCard(card.getId()).getIdMembers()) {
 			if(trello.getMemberInformation(memberUsername).getId().equals(id)) {
 				hour.setMember(trello.getMemberInformation(memberUsername),trello.getCard(card.getId()));
@@ -101,7 +102,7 @@ public class Task extends CardFunctions {
 
 	@Override
 	public double membergetTimeSpent(String memberUsername) {
-		Trello trello = null;
+
 		getHoursList(memberUsername,this.getCard());
 		double timeSpent = 0;
 		for (Hours h : memberhoursList) {
@@ -112,20 +113,24 @@ public class Task extends CardFunctions {
 		}
 		return timeSpent;
 	}
+	//////////////////////////////////////////////
+	//public void getHoursListestimadas(String memberUsername,Card card) {
 
 	@Override
-	public double membergetTimeEstimated(String idMember) {
+	public double membergetTimeEstimated(String memberUsername) {
 		//getHoursListestimadas(membro do id,this.getCard);
 		double estimatedTime = 0;
 		for (Hours h : memberhoursList) {
 			if (h.getCardId().equals(this.getCard().getId())) {
-				if (h.getUtilizador().equals(idMember))
+				if (h.getUtilizador().equals(memberUsername))
 					estimatedTime += h.membergetTimeEstimated();
 			}
 		}
 		return estimatedTime;
 
 	}
+
+
 
 }
 
