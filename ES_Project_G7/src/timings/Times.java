@@ -7,9 +7,9 @@ public interface Times {
 
 	double getTimeEstimated();
 
-	boolean memberhasTimeSpent(String idMmber);
+	boolean memberhasTimeSpent(String memberUsername);
 
-	double membergetTimeSpent(String idMember);
+	double membergetTimeSpent(String memberUsername);
 
-	double membergetTimeEstimated(String idMember);
+	double membergetTimeEstimated(String memberUsername);
 }

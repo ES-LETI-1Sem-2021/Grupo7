@@ -49,17 +49,17 @@ public abstract class CardFunctions implements Times {
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String idMmber) {
+	public boolean memberhasTimeSpent(String imemberUsername) {
 		return false;
 	}
 
 	@Override
-	public double membergetTimeSpent(String idMember) {
+	public double membergetTimeSpent(String memberUsername) {
 		return 0;
 	}
 
 	@Override
-	public double membergetTimeEstimated(String idMember) {
+	public double membergetTimeEstimated(String memberUsername) {
 		return 0;
 	}
 

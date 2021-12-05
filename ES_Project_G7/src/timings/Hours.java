@@ -51,6 +51,7 @@ public class Hours implements MemberTimes {
 	@Override
 	public double membergetTimeEstimated() {
 		//////////////////////////////////////////////
+		
 		return timeEstimated;
 	}
 
