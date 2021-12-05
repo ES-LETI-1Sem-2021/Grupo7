@@ -1,34 +1,19 @@
 package data;
 
+import appearence.*;
+
 import java.awt.Container;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
-
-import com.julienvey.trello.Trello;
-import com.julienvey.trello.impl.TrelloImpl;
-import com.julienvey.trello.impl.http.ApacheHttpClient;
-
-import appearence.FontType;
-import appearence.Layout;
-import appearence.LayoutType;
-import appearence.TextField;
-import appearence.TextLabel;
-import gui.MainWindow;
+import org.kohsuke.github.*;
 
 public class GitConnect implements Connection {
 
 	private Layout layout;
-	private Container pane;
 	private GitHub gitMvn;
 	private GHRepository gitRepo;
 	private static final int STARTING_POINT = 150;
 	private boolean connected;
-	private boolean hasButton;
 
 	private TextLabel title;
 	private TextLabel[] labels;
@@ -39,20 +24,15 @@ public class GitConnect implements Connection {
 	private String accessToken = "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"; // ogait
 	private String repository = "ES-LETI-1Sem-2021-Grupo7";
 
+/////////////////
+//Constructors
+////////////////
+
 	/**
 	 * Create GitConnect without any previous Layout made.
 	 */
-	public GitConnect(Container pane, boolean hasButton) throws IOException {
+	public GitConnect(Container pane) throws IOException {
 		getDataLayout(pane);
-		connected = false;
-		connectTo();
-	}
-
-	/**
-	 * Create GitConnect when there's already a Layout.
-	 */
-	public GitConnect(Layout layout, boolean hasButton) throws IOException {
-		getDataLayout(layout);
 		connected = false;
 		connectTo();
 	}
@@ -66,7 +46,11 @@ public class GitConnect implements Connection {
 		connectTo();
 	}
 
-	/*
+/////////////////
+//Methods
+////////////////
+
+	/**
 	 * Get GitHub data when there's no previous layout.
 	 */
 	@Override
@@ -75,31 +59,19 @@ public class GitConnect implements Connection {
 		layout = new Layout(LayoutType.LAYOUT_SPRING, pane, title, labels, textFields, STARTING_POINT);
 	}
 
-	/*
+	/**
 	 * Get GitHub data when exists a previous layout.
 	 */
 	@Override
-	public void getDataLayout(Layout layout) {   //tentar get pane
+	public void getDataLayout(Layout layout) {
 		getData();
 		this.layout = layout;
-		this.pane = layout.getPane();
 
 		if (layout.getLayoutType() == LayoutType.LAYOUT_SPRING)
 			this.layout.addToSpringLayout(title, labels, textFields, STARTING_POINT);
 	}
 
-	/*
-	 * Establish connection to GitHub.
-	 */
-	@Override
-	public void connectTo() throws IOException {
-		gitMvn = new GitHubBuilder().withOAuthToken(accessToken).build();
-		gitRepo = gitMvn.getRepository(getRepository());
-		System.out.println(getProjectDescription());
-		connected = true;
-	}
-
-	/*
+	/**
 	 * Get GitHub data from user in order to establish connection.
 	 */
 	@Override
@@ -119,6 +91,21 @@ public class GitConnect implements Connection {
 	}
 
 	/**
+	 * Establish connection to GitHub.
+	 */
+	@Override
+	public void connectTo() throws IOException {
+		gitMvn = new GitHubBuilder().withOAuthToken(accessToken).build();
+		gitRepo = gitMvn.getRepository(getRepository());
+		System.out.println(getProjectDescription());
+		connected = true;
+	}
+
+/////////////////
+//Getters & Setters
+////////////////
+
+	/**
 	 * Get GitHub repository.
 	 */
 	private String getRepository() {
@@ -128,22 +115,17 @@ public class GitConnect implements Connection {
 	/**
 	 * Get GitHub API.
 	 */
-	@Override
-	public void getAPI() {
-		getGitHub();
-	}
-
-	private GitHub getGitHub() {
+	public GitHub getGitHub() {
 		return gitMvn;
 	}
 
+	/**
+	 * Check if user is connected to GitHub.
+	 */
 	@Override
 	public boolean connected() {
-		// TODO Auto-generated method stub
 		return connected;
 	}
-
-	/* GETTERS & SETTERS */
 
 	/**
 	 * Get GitConnect layout.
@@ -157,7 +139,6 @@ public class GitConnect implements Connection {
 	 * 
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unused")
 	private String getProjectDescription() throws IOException {
 		return gitRepo.getFileContent("README.md").getContent();
 	}

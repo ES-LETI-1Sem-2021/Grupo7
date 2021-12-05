@@ -20,48 +20,41 @@ public class Layout extends JPanel {
 	private static final int SPACE_TO_FIELD = 150;
 	private static final int GAP = 5;
 
+	/**
+	 * Create a Layout from scratch.
+	 */
 	public Layout(LayoutType layoutType, Container pane, TextLabel title, TextLabel[] labels, TextField[] textFields,
 			int startingPoint) {
 		super(layoutType.getLayout(), true);
 		this.pane = pane;
 		this.layoutType = layoutType;
-		layoutMade = false;
-		addToLayout(title, labels, textFields, startingPoint);
+		createLayout(title, labels, textFields, startingPoint);
 	}
 
-	public Layout(Layout layout, TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
-		this.pane = layout.getPane();
-		this.layoutType = layout.getLayoutType();
-		layoutMade = true;
-		addToLayout(title, labels, textFields, startingPoint);
-	}
-
-	public void addToLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
+	/**
+	 * In order to add elements to a Layout, it has to verify which will be the
+	 * LayoutType and then if there's a previous Layout to work on as a base. If it
+	 * does not exist any Layout, it will create one according to the LayoutType.
+	 */
+	private void createLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
 		if (layoutType == LayoutType.LAYOUT_SPRING) {
-			if (!layoutMade) {
-				this.layout = new SpringLayout();
-				System.out.println("Este layout não estava feito.");
-				layoutMade = true;
-			} else {
-				this.layout = layoutType.getLayout();
-				System.out.println("Este layout estava feito.");
-			}
+			this.layout = new SpringLayout();
 			pane.setLayout((LayoutManager) this.layout);
-			System.out.println("Pane layout: " + pane.getLayout());
 			addToSpringLayout(title, labels, textFields, startingPoint);
-		} else if (layoutType == LayoutType.LAYOUT_GRID) {
-			if (!layoutMade) {
-				this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
-				pane.setLayout((LayoutManager) this.layout);
-				layoutMade = true;
-			}
+//		} else if (layoutType == LayoutType.LAYOUT_GRID) {
+//			this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
+//			pane.setLayout((LayoutManager) this.layout);
 		} else
 			throw new NullPointerException("Wrong Layout.");
 	}
 
-	/* SPRINGLAYOUT */
+/////////////////
+//SpringLayout
+////////////////
 
-	//private?
+	/**
+	 * Add elements to the SpringLayout.
+	 */
 	public void addToSpringLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
 		pane.add(title);
 		putConstraintSL(title, pane, LEFT_SPACE, startingPoint);
@@ -76,27 +69,29 @@ public class Layout extends JPanel {
 		}
 	}
 
+	/**
+	 * Auxiliary function to put constraints to elements in SpringLayout.
+	 */
 	private void putConstraintSL(Component comp, Component reference, int x, int y) {
 		((SpringLayout) layout).putConstraint(SpringLayout.WEST, comp, x, SpringLayout.WEST, reference);
 		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, comp, y, SpringLayout.NORTH, reference);
 	}
 
-	/* GETTERS & SETTERS */
+/////////////////
+//Getters & Setters
+////////////////
 
+	/**
+	 * Get Container from Layout.
+	 */
 	public Container getPane() {
 		return pane;
 	}
 
+	/**
+	 * Get LayoutType implemented in the Layout.
+	 */
 	public LayoutType getLayoutType() {
 		return layoutType;
 	}
-
-	public boolean isLayoutMade() {
-		return layoutMade;
-	}
-	
-	public Layout getPanel() {
-		return this;
-	}
-
 }

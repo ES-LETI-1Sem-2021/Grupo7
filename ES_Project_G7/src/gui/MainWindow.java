@@ -68,8 +68,8 @@ public class MainWindow extends JFrame {
 //		trello = new TrelloConnectBackup(this);
 //		github = new GitConnectBackup(this);
 		
-		trello = new TrelloConnect(this.getContentPane(), false);
-		github = new GitConnect(trello.getLayout().getPanel(), false);
+		trello = new TrelloConnect(this.getContentPane());
+		github = new GitConnect(trello.getLayout());
 		
 //		github = new GitConnect(this.getContentPane(), false);
 //		trello = new TrelloConnect(github.getLayout().getPanel(), false);

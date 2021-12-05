@@ -17,7 +17,5 @@ public interface Connection {
 	
 	void connectTo() throws IOException;
 
-	void getAPI();
-
 	boolean connected();
 }
