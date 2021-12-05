@@ -6,4 +6,5 @@ public interface MemberTimes {
 	double membergetTimeSpent();
 
 	double membergetTimeEstimated();
+
 }

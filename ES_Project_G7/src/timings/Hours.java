@@ -1,5 +1,7 @@
 package timings;
 
+import com.julienvey.trello.Trello;
+import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 
@@ -18,19 +20,37 @@ public class Hours implements MemberTimes {
 	public String getUtilizador() {
 		return membro.getId();
 	}
-
+	
+	public void setMember(Member member,Card card) {
+		this.card=card;
+	this.membro=member;
+	}
+	
 	@Override
 	public boolean memberhasTimeSpent() {
+		if(timeSpent==0)
 		return false;
+		else 
+			return true;
 	}
 
 	@Override
 	public double membergetTimeSpent() {
+		////////////////////////////////////////
+		Trello trello = null;
+		for(Action a: trello.getCard(card.getId()).getActions()) {
+			String data=a.getData().getText();
+			String [] auxiliar=data.split("/");
+			String [] auxiliar2=auxiliar[0].split("!");
+			timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
+			
+		}
 		return timeSpent;
 	}
 
 	@Override
 	public double membergetTimeEstimated() {
+		//////////////////////////////////////////////
 		return timeEstimated;
 	}
 
@@ -38,4 +58,7 @@ public class Hours implements MemberTimes {
 		return card.getId();
 	}
 
-}
+	
+	}
+
+

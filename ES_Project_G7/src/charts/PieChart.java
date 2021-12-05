@@ -26,7 +26,7 @@ import org.jfree.data.general.PieDataset;
 	  
 	    // Create chart  
 	    JFreeChart chart = ChartFactory.createPieChart(  
-	        "Pie Chart Example",  
+	        "Trello",  
 	        dataset,  
 	        true,   
 	        true,  
