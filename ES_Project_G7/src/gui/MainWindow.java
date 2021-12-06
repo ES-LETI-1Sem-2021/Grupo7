@@ -3,7 +3,12 @@ package gui;
 import java.io.IOException;
 import javax.swing.*;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import appearence.*;
+import appearence.Button;
 import data.*;
 
 @SuppressWarnings("serial")
@@ -11,13 +16,15 @@ public class MainWindow extends JFrame {
 
 	private static MainWindow FRAME;
 	private Layout layout;
+	private static final int X_LOCATION = 250;
+	private static final int Y_LOCATION = 250;
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;
 
 	private int page_number = 0;
 
-	private GitConnect github;
 	private TrelloConnect trello;
+	private GitConnect github;
 
 	/**
 	 * Create singleton of Window class.
@@ -38,16 +45,13 @@ public class MainWindow extends JFrame {
 	private MainWindow() throws IOException {
 		super("API");
 
-		layout = new Layout();
-		setSize(WIDTH, HEIGHT);
+		setBounds(X_LOCATION, Y_LOCATION, WIDTH, HEIGHT);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		if (page_number == 0)
 			initialize();
-
-//		add(trello, BorderLayout.NORTH);
-//		add(github);
+//		pack();
 	}
 
 	/**
@@ -56,14 +60,26 @@ public class MainWindow extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		trello = new TrelloConnect(this);
-		layout.setSpringLayoutMade(true);
-		System.out.println(layout.isSpringLayoutMade());
-		github = new GitConnect(this);
-
-//		add(trello, BorderLayout.NORTH);
-//		add(github, BorderLayout.CENTER);
-
+		trello = new TrelloConnect(this.getContentPane());
+		github = new GitConnect(trello.getLayout());
+		
+		Button button = new Button("LOGIN");
+			
+//		button.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				dispose();
+//				try {
+//					github = new GitConnect(MainWindow.getFrame());
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+//			}	
+//		});
+//		add(button);
+		
+//		Layout layout = new Layout(LayoutType.LAYOUT_BORDER, this, BorderLayout.LINE_END, button);
+//		Layout layout = new Layout(LayoutType.LAYOUT_SPRING, JPanel.TOP_ALIGNMENT, this, button);
 	}
 
 	/**
@@ -72,17 +88,23 @@ public class MainWindow extends JFrame {
 	public static MainWindow getFrame() {
 		return FRAME;
 	}
+	
+	public TrelloConnect getTrelloConnect() {
+		return trello;
+	}
 
-	/**
-	 * Get frame's width.
-	 */
+	public static int getxLocation() {
+		return X_LOCATION;
+	}
+
+	public static int getyLocation() {
+		return Y_LOCATION;
+	}
+
 	public static int getHorizontalSize() {
 		return WIDTH;
 	}
 
-	/**
-	 * Get frame's height.
-	 */
 	public static int getVerticalSize() {
 		return HEIGHT;
 	}

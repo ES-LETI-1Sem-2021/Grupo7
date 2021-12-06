@@ -5,7 +5,7 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class TextField extends JTextField {
 
-	private static final int COLUMNS = 50;
+	private static final int DEFAULT_COLUMNS = 50;
 
 	public TextField() {
 		super();
@@ -18,7 +18,7 @@ public class TextField extends JTextField {
 	 * '25' - number of columns
 	 */
 	public TextField(String string) {
-		super(string, COLUMNS);
+		super(string, DEFAULT_COLUMNS);
 		super.setFont(FontType.FONT_TEXT_FIELD.getFont());
 //		super.setBounds(15, y_Position, Win.getHorizontalSize(), 30);
 	}
@@ -30,7 +30,7 @@ public class TextField extends JTextField {
 	}
 
 	public static int getFieldWidth() {
-		return COLUMNS;
+		return DEFAULT_COLUMNS;
 	}
 
 	public String getString() {

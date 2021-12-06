@@ -1,67 +1,108 @@
 package data;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.URI;
+import appearence.*;
+import appearence.TextField;
+
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
-
 import com.julienvey.trello.Trello;
-import com.julienvey.trello.TrelloHttpClient;
-import com.julienvey.trello.domain.Argument;
-import com.julienvey.trello.domain.Board;
-import com.julienvey.trello.domain.Card;
-import com.julienvey.trello.domain.Member;
-import com.julienvey.trello.domain.Membership;
-import com.julienvey.trello.domain.TList;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
+import com.julienvey.trello.domain.*;
 
-import appearence.Button;
-import appearence.FontType;
-import appearence.Layout;
-import appearence.TextField;
-import appearence.TextLabel;
-import gui.MainWindow;
+public class TrelloConnect implements Connection {
 
-@SuppressWarnings("serial")
-public class TrelloConnect extends JPanel implements Conection {
-
+	private Layout layout;
 	private Trello trelloMvn;
-	private static final int STARTING_POINT = 0;
+	private static final int STARTING_POINT = 5;
 	private boolean connected;
 
-//	private String login;
-//	private String accessToken;
-
-	// Key & AccessToken - Tiago
-	private String login = "61d79cb5bcc75c155c7fd74aef6f1b4f";
-	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-	private String boardName = "ES Project";
+	private TextLabel title;
+	private TextLabel[] labels;
+	private TextField[] textFields;
 
 	private List<Member> members;
 
+	// DataTest - Tiago
+	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
+	private String boardName = "ES Project";
+	private String boardID = "614de795e5e8b75fb65a9cdc";
+
+/////////////////
+//Constructors
+////////////////
+
 	/**
-	 * @throws IOException
+	 * Create TrelloConnect without any previous Layout made.
 	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where the
+	 *                          implementation of the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
-	public TrelloConnect(MainWindow window) throws IOException {
-		super();
-		setAlignmentY(TOP_ALIGNMENT);
-		members = new ArrayList<Member>();
-		getData(window);
+	public TrelloConnect(Container pane) throws IOException {
+		getDataLayout(pane);
 		connected = false;
 		connectTo();
 	}
 
 	/**
-	 * Get Trello data from window frame.
+	 * Create TrelloConnect when there's already a Layout.
+	 * 
+	 * @param <code>layout</code> Uses a predefined layout as a parameter, to define
+	 *                            where will be added the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
-	public void getData(MainWindow window) {
-		TextLabel title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
+	public TrelloConnect(Layout layout) throws IOException {
+		getDataLayout(layout);
+		connected = false;
+		connectTo();
+	}
+
+/////////////////
+//Methods
+////////////////
+
+	/**
+	 * Get Trello data when there's no previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where will be
+	 *                          created the new Layout (which is the layout
+	 *                          instance).
+	 */
+	@Override
+	public void getDataLayout(Container pane) {
+		getData();
+		layout = new Layout(LayoutType.LAYOUT_SPRING, pane, title, labels, textFields, STARTING_POINT);
+	}
+
+	/**
+	 * Get Trello data when exists a previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Layout as base to define where will be added
+	 *                          the getData() function and defines it as the layout
+	 *                          instance.
+	 */
+	@Override
+	public void getDataLayout(Layout layout) {
+		getData();
+		this.layout = layout;
+
+		if (layout.getLayoutType() == LayoutType.LAYOUT_SPRING)
+			this.layout.addToSpringLayout(title, labels, textFields, STARTING_POINT);
+	}
+
+	/**
+	 * Get Trello data from user in order to establish connection.
+	 */
+	@Override
+	public void getData() {
+		title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
 		TextLabel token_lab = new TextLabel("Access Token: ", 15, FontType.FONT_BOLD);
@@ -69,73 +110,95 @@ public class TrelloConnect extends JPanel implements Conection {
 		TextLabel card_lab = new TextLabel("CardBoard: ", 15, FontType.FONT_BOLD);
 		TextField cardBoard = new TextField();
 
-//		Button b = new Button("Submit Trello data");
-//		add(b);
-//		add(b, RIGHT_ALIGNMENT);
-
-//		this.login = login.getText();
-//		this.accessToken = accessToken.getText();
-//		this.boardName = cardBoard.getText();
-
 		TextLabel[] labels = { user_lab, token_lab, card_lab };
-		TextField[] fields = { login, accessToken, cardBoard };
-
-		Layout layout = new Layout();
-		layout.addToSpringLayout(window, title, labels, fields, STARTING_POINT);
+		this.labels = labels;
+		TextField[] textFields = { login, accessToken, cardBoard };
+		this.textFields = textFields;
 	}
 
 	/**
 	 * Establish connection to Trello.
+	 * 
+	 * @throws IOException
 	 */
 	@Override
 	public void connectTo() throws IOException {
-		trelloMvn = new TrelloImpl(login, accessToken, new ApacheHttpClient());
-		getMembers(boardName);
+		trelloMvn = new TrelloImpl(accessKey, accessToken, new ApacheHttpClient());
+		connected = true;
 	}
 
 	/**
-	 * Get Trello API.
-	 */
-	private Trello getTrello() {
-		return trelloMvn;
-	}
-
-	/**
-	 * Get members from Trello Board.
+	 * Get Members from Trello.
+	 * 
+	 * @param <code>boardName</code> Gives the name of the board where it has to go
+	 *                               get the members.
 	 */
 	public void getMembers(String boardName) {
 		Board board = new Board();
 		board.setName(boardName);
-//		Member host = trelloMvn.getMemberInformation(login);
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
 		for (Board bd : allBoards) {
-			if (bd.getName() == boardName) {
+			if (bd.getName().equals(boardName)) {
 				board = trelloMvn.getBoard(bd.getId());
-				List<Membership> boardMembers = board.getMemberships();
-				for (Membership ms : boardMembers) {
-					Member m = new Member();
-					m.setId(ms.getId());
-					System.out.println(m.getEmail());
+				List<Member> boardMembers = board.fetchMembers();
+				for (Member m : boardMembers) {
 					members.add(m);
+					System.out.println("Nome: " + m.getFullName() + " | Usersame: @" + m.getUsername());
 				}
 			}
-//			List<TList> lists = board.fetchLists();
-//			for (TList lista : lists) {
-//				System.out.println(lista.getName() + "- " + lista.getId() + "-" + lista.getIdBoard());
-//			}
 		}
 	}
 
-	public void getAPI() {
-		getTrello();
+/////////////////
+//Getters & Setters
+////////////////
+
+	/**
+	 * Get Trello API.
+	 */
+	public Trello getTrello() {
+		return trelloMvn;
 	}
 
+	/**
+	 * Check if user is connected to Trello.
+	 */
 	@Override
 	public boolean connected() {
 		return connected;
 	}
 
-//	//apenas teste!
+	/**
+	 * Get TrelloConnect layout.
+	 */
+	public Layout getLayout() {
+		return layout;
+	}
+
+/////////////////
+//Testing
+////////////////
+
+	/**
+	 * Test.
+	 */
+	public void teste() {
+
+//		List<Board> boards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
+//		for (Board board : boards)
+//			System.out.println(board.getId() + ":" + board.getName());
+
+//		List<TList> lists = trelloMvn.getBoardLists("614de795e5e8b75fb65a9cdc");
+//		for (TList list : lists)
+//			System.out.println(list.getId() + ":" + list.getName());
+
+		List<Card> cards = trelloMvn.getListCards("61a643e38f57036c86f38a72");
+		for (Card card : cards)
+			System.out.println(card.getId() + ":" + card.getName());
+	}
+
+//	MAIN DE TESTE
+//	
 //	public static void main(String[] args) {
 //		//TrelloDetails td = new TrelloDetails(null);
 //		Trello trelloApi = new TrelloImpl("61d79cb5bcc75c155c7fd74aef6f1b4f", "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118", new ApacheHttpClient());

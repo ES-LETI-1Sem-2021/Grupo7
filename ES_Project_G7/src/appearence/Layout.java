@@ -1,141 +1,136 @@
 package appearence;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 import gui.MainWindow;
 
-public class Layout {
+@SuppressWarnings("serial")
+public class Layout extends JPanel {
 
-//	private GridLayout layout;
-	private SpringLayout layout;
+	private LayoutType layoutType;
+	private Object layout;
+	private Container pane;
 
-	private boolean layoutMade;
+	private static final int LEFT_SPACE = 5;
+	private static final int SPACE_TO_FIELD = 150;
+//	private static final int GAP = 5;                    //para usar com GridLayout
 
-	public Layout() {
-//		layout = new GridLayout(8,3,5,5);
-		layout = new SpringLayout();
+	/**
+	 * Create a Layout from scratch.
+	 * 
+	 * @param <code>layoutType</code>    Gives the LayoutType to be used as base to
+	 *                                   add the elements to the Layout.
+	 * @param <code>pane</code>          Defines the Container in which will be
+	 *                                   added the Layout.
+	 * @param <code>title</code>         Defines the title of the Layout section.
+	 * @param <code>labels</code>        Defines the different labels that will be
+	 *                                   used to define which information it will
+	 *                                   ask from the user.
+	 * @param <code>textFields</code>    Defines the different text fields
+	 *                                   correspondent to the labels.
+	 * @param <code>startingPoint</code> Defines in which point of the Container it
+	 *                                   will start to add the different elements.
+	 */
+	public Layout(LayoutType layoutType, Container pane, TextLabel title, TextLabel[] labels, TextField[] textFields,
+			int startingPoint) {
+		super(layoutType.getLayout(), true);
+		this.pane = pane;
+		this.layoutType = layoutType;
+		createLayout(title, labels, textFields, startingPoint);
 	}
 
-	public void addToSpringLayout(MainWindow win, TextLabel title, TextLabel[] labels, TextField[] textFields,
-			int startingPoint) {
+	/**
+	 * In order to add elements to a Layout, it has to verify which will be the
+	 * LayoutType and then if there's a previous Layout to work on as a base. If it
+	 * does not exist any Layout, it will create one according to the LayoutType.
+	 * 
+	 * @param <code>title</code>         Defines the title of the Layout section.
+	 * @param <code>labels</code>        Defines the different labels that will be
+	 *                                   used to define which information it will
+	 *                                   ask from the user.
+	 * @param <code>textFields</code>    Defines the different text fields
+	 *                                   correspondent to the labels.
+	 * @param <code>startingPoint</code> Defines in which point of the Container it
+	 *                                   will start to add the different elements.
+	 */
+	private void createLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
+		if (layoutType == LayoutType.LAYOUT_SPRING) {
+			this.layout = new SpringLayout();
+			pane.setLayout((LayoutManager) this.layout);
+			addToSpringLayout(title, labels, textFields, startingPoint);
+//		} else if (layoutType == LayoutType.LAYOUT_GRID) {
+//			this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
+//			pane.setLayout((LayoutManager) this.layout);
+		} else
+			throw new NullPointerException("Wrong Layout.");
+	}
 
-		Container pane = win.getContentPane();
-		System.out.println("layoutMade antes da if-statement: " + layoutMade);
+/////////////////
+//SpringLayout
+////////////////
 
-		if (!layoutMade) {
-			pane.setLayout(layout);
-			layoutMade = true;
-			System.out.println("layoutMade if-statement: " + layoutMade);
-		}
-
+	/**
+	 * Add elements to the SpringLayout.
+	 * 
+	 * @param <code>title</code>         Defines the title of the Layout section.
+	 * @param <code>labels</code>        Defines the different labels that will be
+	 *                                   used to define which information it will
+	 *                                   ask from the user.
+	 * @param <code>textFields</code>    Defines the different text fields
+	 *                                   correspondent to the labels.
+	 * @param <code>startingPoint</code> Defines in which point of the Container it
+	 *                                   will start to add the different elements.
+	 */
+	public void addToSpringLayout(TextLabel title, TextLabel[] labels, TextField[] textFields, int startingPoint) {
 		pane.add(title);
-		layout.putConstraint(SpringLayout.WEST, title, 0, SpringLayout.WEST, pane);
-		layout.putConstraint(SpringLayout.NORTH, title, startingPoint, SpringLayout.NORTH, pane);
+		putConstraintSL(title, pane, LEFT_SPACE, startingPoint);
 
-		for (int det = 0; det < labels.length; det++) {
-			pane.add(labels[det]);
-			layout.putConstraint(SpringLayout.WEST, labels[det], 0, SpringLayout.WEST, pane);
-			layout.putConstraint(SpringLayout.NORTH, labels[det], startingPoint + 35, SpringLayout.NORTH, pane);
-
-			pane.add(textFields[det]);
-			layout.putConstraint(SpringLayout.WEST, textFields[det], 10, SpringLayout.EAST, labels[det]);
-			layout.putConstraint(SpringLayout.NORTH, textFields[det], 0, SpringLayout.NORTH, labels[det]);
+		for (int obj = 0; obj < labels.length; obj++) {
+			pane.add(labels[obj]);
+			putConstraintSL(labels[obj], pane, LEFT_SPACE, startingPoint + 35);
+			pane.add(textFields[obj]);
+			putConstraintSL(textFields[obj], pane, LEFT_SPACE + SPACE_TO_FIELD, startingPoint + 35);
 
 			startingPoint += 25;
 		}
-
-//		pane.add(title);
-//		for (int det = 0; det < labels.length; det++) {
-//			pane.add(labels[det]);
-//			pane.add(textFields[det]);
-//			startingPoint += 25;
-//		}
-
 	}
 
-	public void addButton(MainWindow win) {
+	/**
+	 * Auxiliary function to put constraints to elements in SpringLayout.
+	 * 
+	 * @param <code>comp</code>      Gives the component that will be set to a place
+	 *                               in the Layout.
+	 * @param <code>reference</code> Gives the space reference that will be serve as
+	 *                               a guide to place the comp in place.
+	 * @param <code>x</code>         Gives the horizontal distance from the
+	 *                               reference, defining where the comp will be put
+	 *                               in terms of horizontal coordinate.
+	 * @param <code>y</code>         Gives the vertical distance from the reference,
+	 *                               defining where the comp will be put in terms of
+	 *                               vertical coordinate.
+	 */
+	private void putConstraintSL(Component comp, Component reference, int x, int y) {
+		((SpringLayout) layout).putConstraint(SpringLayout.WEST, comp, x, SpringLayout.WEST, reference);
+		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, comp, y, SpringLayout.NORTH, reference);
 	}
 
-	public Layout getLayout() {
-		return this;
-	}
+/////////////////
+//Getters & Setters
+////////////////
 
-	public boolean isSpringLayoutMade() {
-		return layoutMade;
+	/**
+	 * Get Container from Layout.
+	 */
+	public Container getPane() {
+		return pane;
 	}
-
-	public void setSpringLayoutMade(boolean springLayoutMade) {
-		this.layoutMade = springLayoutMade;
+	
+	/**
+	 * Get LayoutType implemented in the Layout.
+	 */
+	public LayoutType getLayoutType() {
+		return layoutType;
 	}
-
-//	private SpringLayout layout;
-//
-//	private boolean springLayoutMade;
-//	private int northLastPosition;
-//	private int westLastPosition;
-//	private int southLastPosition;
-//	private int eastLastPosition;
-//	private int[] lastCoordinates = { northLastPosition, westLastPosition, southLastPosition, eastLastPosition };
-//	private String lastComponent;
-//
-//	public Layout() {
-//		layout = new SpringLayout();
-//	}
-//
-//	public void addToSpringLayout(Win win, TextLabel title, TextLabel[] labels, TextField[] textFields,
-//			int startingPoint) {
-//
-//		Container pane = win.getContentPane();
-//		System.out.println("springLayoutMade antes da if-statement: " + springLayoutMade);
-//
-//		if (!springLayoutMade) {
-//			pane.setLayout(layout);
-//			springLayoutMade = true;
-//			System.out.println("springLayoutMade if-statement: " + springLayoutMade);
-//		}
-//		pane.add(title);
-//		layout.putConstraint(SpringLayout.WEST, title, 0, SpringLayout.WEST, pane);
-//		layout.putConstraint(SpringLayout.NORTH, title, startingPoint, SpringLayout.NORTH, pane);
-//
-//		for (int det = 0; det < labels.length; det++) {
-//			pane.add(labels[det]);
-//			layout.putConstraint(SpringLayout.WEST, labels[det], 0, SpringLayout.WEST, pane);
-//			layout.putConstraint(SpringLayout.NORTH, labels[det], startingPoint + 35, SpringLayout.NORTH, pane);
-//
-//			pane.add(textFields[det]);
-//			layout.putConstraint(SpringLayout.WEST, textFields[det], 10, SpringLayout.EAST, labels[det]);
-//			layout.putConstraint(SpringLayout.NORTH, textFields[det], 0, SpringLayout.NORTH, labels[det]);
-//
-//			eastLastPosition = textFields[det].getHorizontalAlignment();
-//			southLastPosition = labels[det].getVerticalAlignment();
-//
-//			startingPoint += 25;
-//		}
-//	}
-//
-//	public void addButton(Win win) {
-//		Container pane = win.getContentPane();
-//
-//		Button b = new Button("Submit data");
-//
-//		if (!springLayoutMade) {
-//			pane.setLayout(layout);
-//			springLayoutMade = true;
-//		}
-//		layout.putConstraint(SpringLayout.EAST, b, Win.getVerticalSize(), SpringLayout.WEST, pane);
-//		layout.putConstraint(SpringLayout.SOUTH, b, Win.getHorizontalSize(), SpringLayout.NORTH, pane);
-//	}
-//
-//	public Layout getLayout() {
-//		return this;
-//	}
-//	
-//	public boolean isSpringLayoutMade() {
-//		return springLayoutMade;
-//	}
-//
-//	public void setSpringLayoutMade(boolean springLayoutMade) {
-//		this.springLayoutMade = springLayoutMade;
-//	}
 }
