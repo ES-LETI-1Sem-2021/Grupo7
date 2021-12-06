@@ -3,9 +3,6 @@ package gui;
 import java.io.IOException;
 import javax.swing.*;
 
-import appeareceBackup.GitConnectBackup;
-import appeareceBackup.TrelloConnectBackup;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,8 +23,6 @@ public class MainWindow extends JFrame {
 
 	private int page_number = 0;
 
-//	private GitConnectBackup github;
-//	private TrelloConnectBackup trello;
 	private TrelloConnect trello;
 	private GitConnect github;
 
@@ -65,19 +60,11 @@ public class MainWindow extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-//		trello = new TrelloConnectBackup(this);
-//		github = new GitConnectBackup(this);
-		
 		trello = new TrelloConnect(this.getContentPane());
 		github = new GitConnect(trello.getLayout());
 		
-//		github = new GitConnect(this.getContentPane(), false);
-//		trello = new TrelloConnect(github.getLayout().getPanel(), false);
-		
 		Button button = new Button("LOGIN");
-		
-		
-		
+			
 //		button.addActionListener(new ActionListener() {
 //			@Override
 //			public void actionPerformed(ActionEvent e) {
@@ -100,6 +87,10 @@ public class MainWindow extends JFrame {
 	 */
 	public static MainWindow getFrame() {
 		return FRAME;
+	}
+	
+	public TrelloConnect getTrelloConnect() {
+		return trello;
 	}
 
 	public static int getxLocation() {

@@ -4,6 +4,8 @@ import appearence.*;
 
 import java.awt.Container;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 import org.kohsuke.github.*;
 
@@ -30,6 +32,11 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Create GitConnect without any previous Layout made.
+	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where the
+	 *                          implementation of the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
 	public GitConnect(Container pane) throws IOException {
 		getDataLayout(pane);
@@ -39,6 +46,11 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Create GitConnect when there's already a Layout.
+	 * 
+	 * @param <code>layout</code> Uses a predefined layout as a parameter, to define
+	 *                            where will be added the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
 	public GitConnect(Layout layout) throws IOException {
 		getDataLayout(layout);
@@ -52,6 +64,10 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub data when there's no previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where will be
+	 *                          created the new Layout (which is the layout
+	 *                          instance).
 	 */
 	@Override
 	public void getDataLayout(Container pane) {
@@ -61,6 +77,10 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub data when exists a previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Layout as base to define where will be added
+	 *                          the getData() function and defines it as the layout
+	 *                          instance.
 	 */
 	@Override
 	public void getDataLayout(Layout layout) {
@@ -92,25 +112,20 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Establish connection to GitHub.
+	 * 
+	 * @throws IOException
 	 */
 	@Override
 	public void connectTo() throws IOException {
 		gitMvn = new GitHubBuilder().withOAuthToken(accessToken).build();
-		gitRepo = gitMvn.getRepository(getRepository());
-		System.out.println(getProjectDescription());
+		gitRepo = gitMvn.getRepository(getRepositoryName());
+//		System.out.println(getProjectDescription());
 		connected = true;
 	}
 
 /////////////////
 //Getters & Setters
 ////////////////
-
-	/**
-	 * Get GitHub repository.
-	 */
-	private String getRepository() {
-		return projectOwner + "/" + repository;
-	}
 
 	/**
 	 * Get GitHub API.
@@ -135,11 +150,98 @@ public class GitConnect implements Connection {
 	}
 
 	/**
+	 * Get GitHub's repository project owner.
+	 */
+	public String getProjectOwner() {
+		return projectOwner;
+	}
+
+	/**
+	 * Set the project owner of the GitHub repository.
+	 * 
+	 * @param projectOwner
+	 */
+	public void setProjectOwner(String projectOwner) {
+		this.projectOwner = projectOwner;
+	}
+
+	/**
+	 * Get GitHub's accessToken of the current user logged in.
+	 */
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	/**
+	 * Set GitHub's accessToken to the current user logged in.
+	 * 
+	 * @param accessToken
+	 */
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	/**
+	 * Get GitHub's repository name, according to the project owner and repository's
+	 * name.
+	 */
+	private String getRepositoryName() {
+		return projectOwner + "/" + repository;
+	}
+
+	/**
+	 * Get GitHub's Repository.
+	 */
+	public GHRepository getGitRepo() {
+		return gitRepo;
+	}
+
+	/**
 	 * Get from GitHub's repository the project description.
 	 * 
 	 * @throws IOException
 	 */
 	private String getProjectDescription() throws IOException {
 		return gitRepo.getFileContent("README.md").getContent();
+	}
+
+	/**
+	 * Get from GitHub's repository the starting date of the project.
+	 * 
+	 * @throws IOException
+	 */
+	public Date getProjectStartDate() throws IOException {
+		return gitRepo.getCreatedAt();
+	}
+
+	/**
+	 * Get from GitHub's repository the tags from the master branch.
+	 * 
+	 * @throws IOException
+	 */
+	public List<GHTag> getTagsFromMaster() throws IOException {
+		return gitRepo.listTags().asList();
+	}
+
+	/**
+	 * Get from GitHub's repository the tags' dates from the master branch.
+	 * 
+	 * @throws IOException
+	 */
+	public void getTagsWithDate() throws IOException {
+		for (GHTag gt : getTagsFromMaster())
+			System.out.println("Nome tag: " + gt.getName() + "\n" + "Data Criada: " + gt.getOwner().getCreatedAt());
+	}
+
+	/**
+	 * Get from GitHub's repository the commits' list.
+	 * 
+	 * @throws IOException
+	 */
+	public void getCommits() throws IOException {
+		List<GHCommit> list = gitRepo.listCommits().asList();
+		for (GHCommit g : list)
+			System.out.println("Data Commit: " + g.getCommitDate() + " Autor: " + g.getAuthor().getName()
+					+ " Descrição: " + g.getCommitShortInfo().getMessage());
 	}
 }

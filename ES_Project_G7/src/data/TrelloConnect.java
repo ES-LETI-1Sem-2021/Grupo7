@@ -5,10 +5,13 @@ import appearence.TextField;
 
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.impl.TrelloImpl;
 import com.julienvey.trello.impl.http.ApacheHttpClient;
+import com.julienvey.trello.domain.*;
 
 public class TrelloConnect implements Connection {
 
@@ -20,6 +23,8 @@ public class TrelloConnect implements Connection {
 	private TextLabel title;
 	private TextLabel[] labels;
 	private TextField[] textFields;
+
+	private List<Member> members;
 
 	// DataTest - Tiago
 	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
@@ -33,6 +38,11 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Create TrelloConnect without any previous Layout made.
+	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where the
+	 *                          implementation of the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
 	public TrelloConnect(Container pane) throws IOException {
 		getDataLayout(pane);
@@ -42,6 +52,11 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Create TrelloConnect when there's already a Layout.
+	 * 
+	 * @param <code>layout</code> Uses a predefined layout as a parameter, to define
+	 *                            where will be added the getData() functions.
+	 * 
+	 * @throws IOException
 	 */
 	public TrelloConnect(Layout layout) throws IOException {
 		getDataLayout(layout);
@@ -55,6 +70,10 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello data when there's no previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Container as base to define where will be
+	 *                          created the new Layout (which is the layout
+	 *                          instance).
 	 */
 	@Override
 	public void getDataLayout(Container pane) {
@@ -64,6 +83,10 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello data when exists a previous layout.
+	 * 
+	 * @param <code>pane</code> Uses a Layout as base to define where will be added
+	 *                          the getData() function and defines it as the layout
+	 *                          instance.
 	 */
 	@Override
 	public void getDataLayout(Layout layout) {
@@ -95,11 +118,35 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Establish connection to Trello.
+	 * 
+	 * @throws IOException
 	 */
 	@Override
 	public void connectTo() throws IOException {
 		trelloMvn = new TrelloImpl(accessKey, accessToken, new ApacheHttpClient());
 		connected = true;
+	}
+
+	/**
+	 * Get Members from Trello.
+	 * 
+	 * @param <code>boardName</code> Gives the name of the board where it has to go
+	 *                               get the members.
+	 */
+	public void getMembers(String boardName) {
+		Board board = new Board();
+		board.setName(boardName);
+		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
+		for (Board bd : allBoards) {
+			if (bd.getName().equals(boardName)) {
+				board = trelloMvn.getBoard(bd.getId());
+				List<Member> boardMembers = board.fetchMembers();
+				for (Member m : boardMembers) {
+					members.add(m);
+					System.out.println("Nome: " + m.getFullName() + " | Usersame: @" + m.getUsername());
+				}
+			}
+		}
 	}
 
 /////////////////
@@ -127,4 +174,48 @@ public class TrelloConnect implements Connection {
 	public Layout getLayout() {
 		return layout;
 	}
+
+/////////////////
+//Testing
+////////////////
+
+	/**
+	 * Test.
+	 */
+	public void teste() {
+
+//		List<Board> boards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
+//		for (Board board : boards)
+//			System.out.println(board.getId() + ":" + board.getName());
+
+//		List<TList> lists = trelloMvn.getBoardLists("614de795e5e8b75fb65a9cdc");
+//		for (TList list : lists)
+//			System.out.println(list.getId() + ":" + list.getName());
+
+		List<Card> cards = trelloMvn.getListCards("61a643e38f57036c86f38a72");
+		for (Card card : cards)
+			System.out.println(card.getId() + ":" + card.getName());
+	}
+
+//	MAIN DE TESTE
+//	
+//	public static void main(String[] args) {
+//		//TrelloDetails td = new TrelloDetails(null);
+//		Trello trelloApi = new TrelloImpl("61d79cb5bcc75c155c7fd74aef6f1b4f", "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118", new ApacheHttpClient());
+//		//List <Board> b = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
+//		List <Board> boards = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
+//		for (Board board : boards) {
+//		    board.getName();
+//		    board.getId();
+//		    System.out.println(board.getId() + ":" + board.getName());
+//		    List <TList> lists = trelloApi.getBoardLists(board.getId());
+//		    for (TList list : lists) {
+//		        System.out.println(list.getId() + ":" + list.getName());
+//		        List <Card> cards = trelloApi.getListCards(list.getId());
+//		        for (Card card : cards) {
+//		            System.out.println(card.getId() + ":" + card.getName());
+//		        }
+//		    }
+//		}
+//	}
 }
