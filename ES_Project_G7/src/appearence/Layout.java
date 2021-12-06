@@ -96,6 +96,15 @@ public class Layout extends JPanel {
 			startingPoint += 25;
 		}
 	}
+	
+	/*
+	 *
+	 */
+	public void addToSpringLayout(Button button, int positionY) {
+		pane.add(button);
+		((SpringLayout) layout).putConstraint(SpringLayout.HORIZONTAL_CENTER, button, 0, SpringLayout.HORIZONTAL_CENTER, pane);
+		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, button, positionY, SpringLayout.NORTH, pane);
+	}
 
 	/**
 	 * Auxiliary function to put constraints to elements in SpringLayout.

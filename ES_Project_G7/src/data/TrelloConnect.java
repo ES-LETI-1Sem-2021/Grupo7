@@ -23,13 +23,14 @@ public class TrelloConnect implements Connection {
 	private TextLabel title;
 	private TextLabel[] labels;
 	private TextField[] textFields;
+	private Board board = new Board();
 
-	private List<Member> members;
+	private List<Member> members = new ArrayList<Member>();
 
 	// DataTest - Tiago
-	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
-	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-	private String boardName = "ES Project";
+	private String accessKey; // = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String accessToken; // = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
+	private String boardName; // = "ES Project";
 	private String boardID = "614de795e5e8b75fb65a9cdc";
 
 /////////////////
@@ -46,8 +47,8 @@ public class TrelloConnect implements Connection {
 	 */
 	public TrelloConnect(Container pane) throws IOException {
 		getDataLayout(pane);
+		board.setName(boardName);
 		connected = false;
-		connectTo();
 	}
 
 	/**
@@ -61,7 +62,6 @@ public class TrelloConnect implements Connection {
 	public TrelloConnect(Layout layout) throws IOException {
 		getDataLayout(layout);
 		connected = false;
-		connectTo();
 	}
 
 /////////////////
@@ -103,7 +103,7 @@ public class TrelloConnect implements Connection {
 	@Override
 	public void getData() {
 		title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
-		TextLabel user_lab = new TextLabel("Username: ", 15, FontType.FONT_BOLD);
+		TextLabel user_lab = new TextLabel("Access Key: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
 		TextLabel token_lab = new TextLabel("Access Token: ", 15, FontType.FONT_BOLD);
 		TextField accessToken = new TextField();
@@ -114,6 +114,23 @@ public class TrelloConnect implements Connection {
 		this.labels = labels;
 		TextField[] textFields = { login, accessToken, cardBoard };
 		this.textFields = textFields;
+	}
+
+	/**
+	 * Uses data inserted by the user as login instances.
+	 * 
+	 * @throws IOException
+	 */
+	@Override
+	public void assumeData() throws IOException {
+		accessKey = textFields[0].getText();
+		accessToken = textFields[1].getText();
+		boardName = textFields[2].getText();
+		connectTo();
+
+		System.out.println("Access Key: " + accessKey);
+		System.out.println("Access Token: " + accessToken);
+		System.out.println("Board Name: " + boardName);
 	}
 
 	/**
@@ -133,9 +150,9 @@ public class TrelloConnect implements Connection {
 	 * @param <code>boardName</code> Gives the name of the board where it has to go
 	 *                               get the members.
 	 */
-	public void getMembers(String boardName) {
-		Board board = new Board();
-		board.setName(boardName);
+	public void getMembers() {
+//		Board board = new Board();
+//		board.setName(boardName);
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
 		for (Board bd : allBoards) {
 			if (bd.getName().equals(boardName)) {
@@ -143,7 +160,7 @@ public class TrelloConnect implements Connection {
 				List<Member> boardMembers = board.fetchMembers();
 				for (Member m : boardMembers) {
 					members.add(m);
-					System.out.println("Nome: " + m.getFullName() + " | Usersame: @" + m.getUsername());
+					System.out.println("Nome: " + m.getFullName() + " | Username: @" + m.getUsername());
 				}
 			}
 		}
@@ -175,6 +192,13 @@ public class TrelloConnect implements Connection {
 		return layout;
 	}
 
+	/**
+	 * Get boardName.
+	 */
+	public String getBoardName() {
+		return boardName;
+	}
+
 /////////////////
 //Testing
 ////////////////
@@ -184,17 +208,17 @@ public class TrelloConnect implements Connection {
 	 */
 	public void teste() {
 
-//		List<Board> boards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
-//		for (Board board : boards)
-//			System.out.println(board.getId() + ":" + board.getName());
+		List<Board> boards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
+		for (Board board : boards)
+			System.out.println(board.getId() + ":" + board.getName());
 
 //		List<TList> lists = trelloMvn.getBoardLists("614de795e5e8b75fb65a9cdc");
 //		for (TList list : lists)
 //			System.out.println(list.getId() + ":" + list.getName());
 
-		List<Card> cards = trelloMvn.getListCards("61a643e38f57036c86f38a72");
-		for (Card card : cards)
-			System.out.println(card.getId() + ":" + card.getName());
+//		List<Card> cards = trelloMvn.getListCards("61a643e38f57036c86f38a72");
+//		for (Card card : cards)
+//			System.out.println(card.getId() + ":" + card.getName());
 	}
 
 //	MAIN DE TESTE

@@ -22,9 +22,9 @@ public class GitConnect implements Connection {
 	private TextField[] textFields;
 
 	// DataTest
-	private String projectOwner = "mapa95";
-	private String accessToken = "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"; // ogait
-	private String repository = "ES-LETI-1Sem-2021-Grupo7";
+	private String accessToken; // = "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"; // ogait
+	private String projectOwner; // = "mapa95";
+	private String repository; // = "ES-LETI-1Sem-2021-Grupo7";
 
 /////////////////
 //Constructors
@@ -41,7 +41,6 @@ public class GitConnect implements Connection {
 	public GitConnect(Container pane) throws IOException {
 		getDataLayout(pane);
 		connected = false;
-		connectTo();
 	}
 
 	/**
@@ -55,7 +54,6 @@ public class GitConnect implements Connection {
 	public GitConnect(Layout layout) throws IOException {
 		getDataLayout(layout);
 		connected = false;
-		connectTo();
 	}
 
 /////////////////
@@ -97,17 +95,34 @@ public class GitConnect implements Connection {
 	@Override
 	public void getData() {
 		title = new TextLabel("Login GitHub", 15, FontType.FONT_TITLE);
-		TextLabel user_lab = new TextLabel("Project Owner: ", 15, FontType.FONT_BOLD);
-		TextField projectOwner = new TextField("Insert user name owner of the Repository...", 30);
-		TextLabel card_lab = new TextLabel("Repository: ", 15, FontType.FONT_BOLD);
-		TextField repository = new TextField("Insert Repository Name...", 30);
-		TextLabel token_lab = new TextLabel("Login (AccessToken): ", 15, FontType.FONT_BOLD);
+		TextLabel token_label = new TextLabel("Login (AccessToken): ", 15, FontType.FONT_BOLD);
 		TextField accessToken = new TextField("Insert your AccessToken...", 30);
+		TextLabel owner_label = new TextLabel("Project Owner: ", 15, FontType.FONT_BOLD);
+		TextField projectOwner = new TextField("Insert user name owner of the Repository...", 30);
+		TextLabel rep_label = new TextLabel("Repository: ", 15, FontType.FONT_BOLD);
+		TextField repository = new TextField("Insert Repository Name...", 30);
 
-		TextLabel[] labels = { user_lab, card_lab, token_lab };
+		TextLabel[] labels = { token_label, owner_label, rep_label };
 		this.labels = labels;
-		TextField[] textFields = { projectOwner, repository, accessToken };
+		TextField[] textFields = { accessToken, projectOwner, repository };
 		this.textFields = textFields;
+	}
+
+	/**
+	 * Uses data inserted by the user as login instances.
+	 * 
+	 * @throws IOException
+	 */
+	@Override
+	public void assumeData() throws IOException {
+		accessToken = textFields[0].getText();
+		projectOwner = textFields[1].getText();
+		repository = textFields[2].getText();
+		connectTo();
+
+		System.out.println("Access Token: " + accessToken);
+		System.out.println("Project Owner: " + projectOwner);
+		System.out.println("Repository: " + repository);
 	}
 
 	/**
