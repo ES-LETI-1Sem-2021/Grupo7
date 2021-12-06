@@ -13,4 +13,8 @@ public interface MemberTimes {
 
 	double membergetTimeSpent();
 
+
+
+	double getTimeSpent();
+
 }

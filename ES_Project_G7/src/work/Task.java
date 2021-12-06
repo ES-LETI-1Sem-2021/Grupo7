@@ -49,21 +49,28 @@ public class Task extends CardFunctions {
 	public void getCardHoursList(Card card) {
 		this.card =card;
 		List<Hours> memberhoursListaux= new ArrayList<>();
-		for(Member m:	trello.getCardMembers(this.card.getId())) {	
-			memberhoursListaux.add(new Hours (m,this.card));
-		}		
-		this.cardhoursList=memberhoursListaux;
+		
+				for(Member m:	trello.getCardMembers(this.card.getId())) {
+					
+						memberhoursListaux.add(new Hours (m,this.card));
+				}	
+			
+		
+		this.memberhoursList=memberhoursListaux;
+
 	}
 	@Override
-	public double getTimeSpent(Card card) {
-		this.card=card;
+	public double getTimeSpent (Card card ) {
+		this.card =card;
 		getCardHoursList(this.card);
-		double timeSpent = 0;
-		for (Hours h : cardhoursList) {
-			if (h.getCardId().equals(this.card.getId())) {
-				timeSpent += h.membergetTimeSpent();
-			}}
-		return timeSpent;
+		
+		Hours haux=null;
+		for (Hours h : memberhoursList) {
+
+                       haux=h;
+		}	
+				
+		return haux.getTimeSpent();
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -102,14 +109,11 @@ public class Task extends CardFunctions {
 	public void getHoursList(String memberUsername,Card card,String idmember) {
 		this.card =card;
 		List<Hours> memberhoursListaux= new ArrayList<>();
-		for(String id:	card.getIdMembers()) {
-			if(id.equals(idmember)) {
 				for(Member m:	trello.getCardMembers(this.card.getId())) {
 					if(m.getId().equals(idmember))
 						memberhoursListaux.add(new Hours (m,this.card));
 				}	
-			}
-		}
+			
 		this.memberhoursList=memberhoursListaux;
 
 	}
@@ -122,8 +126,8 @@ public class Task extends CardFunctions {
 		for (Hours h : memberhoursList) {
 
 
-			if (h.getCardId().equals(this.card.getId())) {
-
+			if (h.getMember().getUsername().equals(memberUsername) ){
+     
 				timeSpent += h.membergetTimeSpent();
 
 			}}
@@ -143,6 +147,7 @@ public class Task extends CardFunctions {
 			}
 		}
 		return estimatedTime;
+		
 
 	}
 	public static void main(String[] args) throws IOException {
@@ -154,10 +159,12 @@ public class Task extends CardFunctions {
 		System.out.println(c.getName());
 		Task t=new Task(c);
 		for(Member m:	trello.getCardMembers(c.getId())) {
-			if(m.getUsername().equals("tiagoalmeida01"))
+			
+		if(m.getUsername().equals("tiagoalmeida01")) {
+			System.out.println("Tempo gasto pelo Tiago");
 				System.out.println(t.membergetTimeSpent("tiagoalmeida01",c,m.getId()));
-		}
-		System.out.println(t.getTimeSpent(c));
+		}}
+		System.out.println("Tempo Total da Task");
+	System.out.println(t.getTimeSpent(c));
 	}
 }
-
