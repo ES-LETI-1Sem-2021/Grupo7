@@ -5,23 +5,24 @@ import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 
-public class Hours implements MemberTimes {
+import data.TrelloConnect;
+import gui.MainWindow;
 
-    private Trello trello = null;
+public class Hours implements MemberTimes {
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private Trello trello= trelloconnect.getTrello();
 	private Member membro;
 	private Card card;
 	private double timeSpent;
 	private double timeEstimated;
+	public Hours(Member membro,Card card) {
+		setMember(membro,card);
 
-	public Hours(Member membro) {
-		this.membro = membro;
-		this.timeEstimated = 0;
-		this.timeSpent = 0;
-		//iniciar trello
+		;
 	}
 
-	public String getUtilizador() {
-		return membro.getId();
+	public Member getMember(){
+		return this.membro;
 	}
 
 	public void setMember(Member member,Card card) {
@@ -39,14 +40,16 @@ public class Hours implements MemberTimes {
 
 	@Override
 	public double membergetTimeSpent() {
-		
-		for(Action a: trello.getCard(card.getId()).getActions()) {
-			String data=a.getData().getText();
-			String [] auxiliar=data.split("/");
-			String [] auxiliar2=auxiliar[0].split("!");
-			timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
 
+		for(Action a: trello.getCardActions(this.getCardId())) {
+			if(a.getData().getText()!=null) {
+				String data=a.getData().getText();
+				String [] auxiliar=data.split("/");
+				String [] auxiliar2=auxiliar[0].split("!");
+				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
+			}
 		}
+
 		return timeSpent;
 	}
 
@@ -54,12 +57,16 @@ public class Hours implements MemberTimes {
 	public double membergetTimeEstimated() {
 		///////////////////////////////////////////////
 		//Obter tempo estimado
-		for(Action a: trello.getCard(card.getId()).getActions()) {
-			String data=a.getData().getText();
-			String [] auxiliar=data.split("/");
-			String [] auxiliar2=auxiliar[0].split("!");
-			timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
 
+
+		for(Action a: trello.getCard(card.getId()).getActions()) {
+
+			String data=a.getData().getText();
+			if (data != null){
+				String [] auxiliar=data.split("/");
+				String [] auxiliar2=auxiliar[0].split("!");
+				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
+			}
 		}
 
 		return timeEstimated;

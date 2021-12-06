@@ -3,6 +3,8 @@ package gui;
 import java.io.IOException;
 import javax.swing.*;
 
+import com.julienvey.trello.Trello;
+
 import appearence.*;
 import data.*;
 
@@ -46,8 +48,8 @@ public class MainWindow extends JFrame {
 		if (page_number == 0)
 			initialize();
 
-//		add(trello, BorderLayout.NORTH);
-//		add(github);
+		//		add(trello, BorderLayout.NORTH);
+		//		add(github);
 	}
 
 	/**
@@ -61,8 +63,8 @@ public class MainWindow extends JFrame {
 		System.out.println(layout.isSpringLayoutMade());
 		github = new GitConnect(this);
 
-//		add(trello, BorderLayout.NORTH);
-//		add(github, BorderLayout.CENTER);
+		//		add(trello, BorderLayout.NORTH);
+		//		add(github, BorderLayout.CENTER);
 
 	}
 
@@ -85,5 +87,8 @@ public class MainWindow extends JFrame {
 	 */
 	public static int getVerticalSize() {
 		return HEIGHT;
+	}
+	public TrelloConnect getTrello() {
+		return trello;
 	}
 }

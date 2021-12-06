@@ -7,14 +7,17 @@ import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 
+import data.TrelloConnect;
+import gui.MainWindow;
 import timings.Times;
 
 public class Sprint implements Times {
-	private Trello trello=null ;
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private Trello trello= trelloconnect.getTrello();
 	private List<String> membersIDs; // List<Member> ?
 	private String sprint;
 	private List<Card> taskList;
-
+	private MainWindow main;
 	public Sprint(String sprint) {
 		this.sprint = sprint;
 		this.membersIDs = new ArrayList<String>();
@@ -35,6 +38,7 @@ public class Sprint implements Times {
 		taskList=trello.getListCards(getSprint());
 		List<String> newList = new ArrayList<String>();
 		for (Card c : this.taskList) {
+
 			Task t= new Task (c);
 			newList.addAll(t.getMembersIDs());
 		}
@@ -68,25 +72,7 @@ public class Sprint implements Times {
 		return estimatedTime;
 	}
 
-	@Override
-	public boolean memberhasTimeSpent(String memberUsername) {
-		if (membergetTimeSpent(memberUsername) == 0)
-			return false;
-		else
-			return true;
-	}
 
-	@Override
-	public double membergetTimeSpent(String memberUsername) {
-		double timeSpent = 0;
-		for (Card c: this.taskList) {
-			Task t= new Task (c);
-			if (t.hasTimeSpent())
-				timeSpent += t.membergetTimeSpent(memberUsername);
-		}
-		return timeSpent;
-
-	}
 
 	@Override
 	public double membergetTimeEstimated(String memberUsername) {
@@ -96,6 +82,27 @@ public class Sprint implements Times {
 			estimatedTime += t.membergetTimeEstimated(memberUsername);
 		}
 		return estimatedTime;
+
+	}
+
+	@Override
+	public double membergetTimeSpent(String memberUsername, Card card, String idmember) {
+		double timeSpent = 0;
+		for (Card c: this.taskList) {
+			Task t= new Task (c);
+			if (t.hasTimeSpent())
+				timeSpent += t.membergetTimeSpent(memberUsername,card,idmember);
+		}
+		return timeSpent;
+
+	}
+
+	@Override
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
+		if (membergetTimeSpent(memberUsername,card,idmember) == 0)
+			return false;
+		else
+			return true;
 
 	}
 

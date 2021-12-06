@@ -1,5 +1,7 @@
 package timings;
 
+import com.julienvey.trello.domain.Card;
+
 public interface Times {
 	boolean hasTimeSpent();
 
@@ -7,9 +9,17 @@ public interface Times {
 
 	double getTimeEstimated();
 
-	boolean memberhasTimeSpent(String memberUsername);
+	
 
-	double membergetTimeSpent(String memberUsername);
 
 	double membergetTimeEstimated(String memberUsername);
+
+	
+
+	
+
+	double membergetTimeSpent(String memberUsername, Card card, String idmember);
+
+	boolean memberhasTimeSpent(String memberUsername, Card card, String idmember);
+
 }

@@ -1,5 +1,6 @@
 package work;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +8,15 @@ import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 
-public class ProductBacklog extends CardFunctions {
+import data.TrelloConnect;
+import gui.MainWindow;
 
+public class ProductBacklog extends CardFunctions {
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private Trello trello= trelloconnect.getTrello();
 	private List<Card> taskList;
-	
-	private Trello trello = null;
+
+
 	public ProductBacklog() {
 		super ();	
 		//iniciar trello
@@ -39,20 +44,21 @@ public class ProductBacklog extends CardFunctions {
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String memberUsername) {
-		if (membergetTimeSpent(memberUsername) == 0)
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember){
+
+		if (membergetTimeSpent(memberUsername,card,idmember) == 0)
 			return false;
 		else
 			return true;
 	}
 
 	@Override
-	public double membergetTimeSpent(String memberUsername) {
+	public double  membergetTimeSpent(String memberUsername, Card card, String idmember) {
 		double timeSpent = 0;
 		for (Card c : this.taskList) {
 			Task t = new Task(c);
 			if (t.hasTimeSpent())
-				timeSpent += t.membergetTimeSpent(memberUsername);
+				timeSpent += t.membergetTimeSpent(memberUsername,card,idmember);
 		}
 		return timeSpent;
 

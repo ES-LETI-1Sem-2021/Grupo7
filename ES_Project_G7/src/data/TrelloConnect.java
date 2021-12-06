@@ -39,6 +39,7 @@ public class TrelloConnect extends JPanel implements Conection {
 
 	// Key & AccessToken - Tiago
 	private String login = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String username = "tiagoalmeida01";
 	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
 	private String boardName = "ES Project";
 
@@ -96,7 +97,7 @@ public class TrelloConnect extends JPanel implements Conection {
 	/**
 	 * Get Trello API.
 	 */
-	private Trello getTrello() {
+	public Trello getTrello() {
 		return trelloMvn;
 	}
 
@@ -129,12 +130,17 @@ public class TrelloConnect extends JPanel implements Conection {
 	public void getAPI() {
 		getTrello();
 	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
 
 	@Override
 	public boolean connected() {
 		return connected;
 	}
-
+	
 //	//apenas teste!
 //	public static void main(String[] args) {
 //		//TrelloDetails td = new TrelloDetails(null);
