@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.julienvey.trello.Trello;
+import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 import com.julienvey.trello.domain.Member;
@@ -19,7 +20,7 @@ import timings.Date;
 import timings.Hours;
 
 public class Task extends CardFunctions {
-	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrelloConnect();
 	private Trello trello= trelloconnect.getTrello();
 	private Hours hour;
 	private Member membro = null;
@@ -60,18 +61,22 @@ public class Task extends CardFunctions {
 
 	}
 	@Override
-	public double getTimeSpent (Card card ) {
-		this.card =card;
-		getCardHoursList(this.card);
+		public double getTimeSpent() {
+		double timeSpent = 0;
+			for(Action a: trello.getCardActions(this.getCardId())) {
+				if(a.getData().getText()!=null) {
+					String data=a.getData().getText();
+					if(!data.contains("@global")) {
+					String [] auxiliar=data.split("/");
+					String [] auxiliar2=auxiliar[0].split("!");
+					timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
+				}
+			}
+			}
+			
+			return timeSpent;
+		}
 		
-		Hours haux=null;
-		for (Hours h : memberhoursList) {
-
-                       haux=h;
-		}	
-				
-		return haux.getTimeSpent();
-	}
 
 	//////////////////////////////////////////////////////////////////
 	///////public void getCardHoursListestimated(this.getCard(Card card) {}
@@ -152,10 +157,10 @@ public class Task extends CardFunctions {
 	}
 	public static void main(String[] args) throws IOException {
 
-		TrelloConnect trelloconnect = MainWindow.getInstance().getTrello();
+		TrelloConnect trelloconnect = MainWindow.getInstance().getTrelloConnect();
 		Trello trello= trelloconnect.getTrello();
 		Card c;
-		c=trello.getCard("61998450c603e414a57aee16");
+		c=trello.getCard("61ad5d6977185c052ba9bca0");
 		System.out.println(c.getName());
 		Task t=new Task(c);
 		for(Member m:	trello.getCardMembers(c.getId())) {
@@ -165,6 +170,30 @@ public class Task extends CardFunctions {
 				System.out.println(t.membergetTimeSpent("tiagoalmeida01",c,m.getId()));
 		}}
 		System.out.println("Tempo Total da Task");
-	System.out.println(t.getTimeSpent(c));
+	System.out.println(t.getTimeSpent());
+	}
+
+
+	@Override
+	public double getTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public boolean hasTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	
+
+
+	@Override
+	public double membergetTimeSpent(String memberUsername, String idmember, String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

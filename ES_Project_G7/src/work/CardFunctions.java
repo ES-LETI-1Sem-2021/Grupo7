@@ -15,7 +15,7 @@ import timings.Date;
 import timings.Times;
 
 public abstract class CardFunctions implements Times {
-	private Trello trello = MainWindow.getFrame().getTrello().getTrello();
+	private Trello trello = MainWindow.getFrame().getTrelloConnect().getTrello();
 	private Card card;
 	private Date dueDate;
 	private List<Label> labelList;

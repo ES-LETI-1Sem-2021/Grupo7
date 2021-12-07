@@ -12,19 +12,22 @@ import data.TrelloConnect;
 import gui.MainWindow;
 
 public class ProductBacklog extends CardFunctions {
-	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrelloConnect();
 	private Trello trello= trelloconnect.getTrello();
 	private List<Card> taskList;
 
 
 	public ProductBacklog() {
 		super ();	
-		//iniciar trello
+		
 	}
-
+	public void getListtarefa(String sprintName) {
+		this.taskList=trelloconnect.listCardsSprint(trelloconnect.getSprint(sprintName));
+	}
 	@Override
 	public double getTimeSpent() {
 		double timeSpent = 0;
+	//	getListtarefa(");
 		for (Card c : this.taskList) {
 			Task t = new Task(c);
 			if (t.hasTimeSpent())
@@ -73,5 +76,23 @@ public class ProductBacklog extends CardFunctions {
 		}
 		return estimatedTime;
 
+	}
+
+	@Override
+	public double getTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean hasTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double membergetTimeSpent(String memberUsername, String idmember, String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

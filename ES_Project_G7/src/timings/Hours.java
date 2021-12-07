@@ -9,7 +9,7 @@ import data.TrelloConnect;
 import gui.MainWindow;
 
 public class Hours implements MemberTimes {
-	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrello();
+	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrelloConnect();
 	private Trello trello= trelloconnect.getTrello();
 	private Member membro;
 	private Card card;
@@ -45,28 +45,17 @@ public class Hours implements MemberTimes {
 			if(a.getData().getText()!=null) {
 				if(a.getIdMemberCreator().equals(membro.getId())) {
 				String data=a.getData().getText();
+				if(!data.contains("@global")) {
 				String [] auxiliar=data.split("/");
 				String [] auxiliar2=auxiliar[0].split("!");
 				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
 			}
-		}}
+		}}}
 
 		return timeSpent;
 	}
 
-	public double getTimeSpent() {
 
-		for(Action a: trello.getCardActions(this.getCardId())) {
-			if(a.getData().getText()!=null) {
-				String data=a.getData().getText();
-				String [] auxiliar=data.split("/");
-				String [] auxiliar2=auxiliar[0].split("!");
-				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
-			}
-		}
-
-		return timeSpent;
-	}
 	@Override
 	public double membergetTimeEstimated() {
 		///////////////////////////////////////////////
@@ -77,17 +66,24 @@ public class Hours implements MemberTimes {
 
 			String data=a.getData().getText();
 			if (data != null){
+				if(!data.contains("@global")) {
 				String [] auxiliar=data.split("/");
 				String [] auxiliar2=auxiliar[0].split("!");
 				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
 			}
-		}
+		}}
 
 		return timeEstimated;
 	}
 
 	public String getCardId() {
 		return card.getId();
+	}
+
+	@Override
+	public double getTimeSpent() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
