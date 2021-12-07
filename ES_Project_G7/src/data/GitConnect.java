@@ -22,9 +22,9 @@ public class GitConnect implements Connection {
 	private TextField[] textFields;
 
 	// DataTest
-	private String accessToken; // = "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"; // ogait
-	private String projectOwner; // = "mapa95";
-	private String repository; // = "ES-LETI-1Sem-2021-Grupo7";
+	private String accessToken = "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"; // ogait
+	private String projectOwner = "mapa95";
+	private String repository = "ES-LETI-1Sem-2021-Grupo7";
 
 /////////////////
 //Constructors
@@ -33,9 +33,8 @@ public class GitConnect implements Connection {
 	/**
 	 * Create GitConnect without any previous Layout made.
 	 * 
-	 * @param <code>pane</code> Uses a Container as base to define where the
-	 *                          implementation of the getData() functions.
-	 * 
+	 * @param pane Uses a <code>Container</code> as base to define where the
+	 *             implementation of the <code>getData()</code> functions.
 	 * @throws IOException
 	 */
 	public GitConnect(Container pane) throws IOException {
@@ -46,9 +45,8 @@ public class GitConnect implements Connection {
 	/**
 	 * Create GitConnect when there's already a Layout.
 	 * 
-	 * @param <code>layout</code> Uses a predefined layout as a parameter, to define
-	 *                            where will be added the getData() functions.
-	 * 
+	 * @param layout Uses a predefined <code>Layout</code> as a parameter, to define
+	 *               where will be added the <code>getData()</code> functions.
 	 * @throws IOException
 	 */
 	public GitConnect(Layout layout) throws IOException {
@@ -63,9 +61,9 @@ public class GitConnect implements Connection {
 	/**
 	 * Get GitHub data when there's no previous layout.
 	 * 
-	 * @param <code>pane</code> Uses a Container as base to define where will be
-	 *                          created the new Layout (which is the layout
-	 *                          instance).
+	 * @param pane Uses a <code>Container</code> as base to define where will be
+	 *             created the new <code>Layout</code> (which is the layout
+	 *             instance).
 	 */
 	@Override
 	public void getDataLayout(Container pane) {
@@ -76,9 +74,9 @@ public class GitConnect implements Connection {
 	/**
 	 * Get GitHub data when exists a previous layout.
 	 * 
-	 * @param <code>pane</code> Uses a Layout as base to define where will be added
-	 *                          the getData() function and defines it as the layout
-	 *                          instance.
+	 * @param pane Uses a <code>Layout</code> as base to define where will be added
+	 *             the <code>getData()</code> function and defines it as the layout
+	 *             instance.
 	 */
 	@Override
 	public void getDataLayout(Layout layout) {
@@ -106,6 +104,7 @@ public class GitConnect implements Connection {
 		this.labels = labels;
 		TextField[] textFields = { accessToken, projectOwner, repository };
 		this.textFields = textFields;
+		
 	}
 
 	/**
@@ -115,9 +114,9 @@ public class GitConnect implements Connection {
 	 */
 	@Override
 	public void assumeData() throws IOException {
-		accessToken = textFields[0].getText();
-		projectOwner = textFields[1].getText();
-		repository = textFields[2].getText();
+//		accessToken = textFields[0].getText();
+//		projectOwner = textFields[1].getText();
+//		repository = textFields[2].getText();
 		connectTo();
 
 		System.out.println("Access Token: " + accessToken);
@@ -144,6 +143,8 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub API.
+	 * 
+	 * @return
 	 */
 	public GitHub getGitHub() {
 		return gitMvn;
@@ -159,6 +160,8 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitConnect layout.
+	 * 
+	 * @return
 	 */
 	public Layout getLayout() {
 		return layout;
@@ -166,6 +169,8 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub's repository project owner.
+	 * 
+	 * @return
 	 */
 	public String getProjectOwner() {
 		return projectOwner;
@@ -182,6 +187,8 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub's accessToken of the current user logged in.
+	 * 
+	 * @return
 	 */
 	public String getAccessToken() {
 		return accessToken;
@@ -199,6 +206,8 @@ public class GitConnect implements Connection {
 	/**
 	 * Get GitHub's repository name, according to the project owner and repository's
 	 * name.
+	 * 
+	 * @return
 	 */
 	private String getRepositoryName() {
 		return projectOwner + "/" + repository;
@@ -206,6 +215,8 @@ public class GitConnect implements Connection {
 
 	/**
 	 * Get GitHub's Repository.
+	 * 
+	 * @return
 	 */
 	public GHRepository getGitRepo() {
 		return gitRepo;
@@ -214,6 +225,7 @@ public class GitConnect implements Connection {
 	/**
 	 * Get from GitHub's repository the project description.
 	 * 
+	 * @return
 	 * @throws IOException
 	 */
 	private String getProjectDescription() throws IOException {
@@ -223,6 +235,7 @@ public class GitConnect implements Connection {
 	/**
 	 * Get from GitHub's repository the starting date of the project.
 	 * 
+	 * @return
 	 * @throws IOException
 	 */
 	public Date getProjectStartDate() throws IOException {
@@ -232,6 +245,7 @@ public class GitConnect implements Connection {
 	/**
 	 * Get from GitHub's repository the tags from the master branch.
 	 * 
+	 * @return
 	 * @throws IOException
 	 */
 	public List<GHTag> getTagsFromMaster() throws IOException {
