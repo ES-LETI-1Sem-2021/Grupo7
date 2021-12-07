@@ -1,33 +1,48 @@
 package work;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
+import com.julienvey.trello.domain.Member;
 
-import timings.Date;
+import gui.MainWindow;
 import timings.Times;
 
 public abstract class CardFunctions implements Times {
-
+	private Trello trello = MainWindow.getFrame().getTrelloConnect().getTrello();
 	private Card card;
 	private Date dueDate;
 	private List<Label> labelList;
 	private List<String> membersIDs; // List<Member> ?
-
+	private List<Member> members;
+	private List<Card> tasklist;
 	private double timeSpent;
 	private double timeEstimated;
 
 	public CardFunctions() {
-		this.setLabelList(new ArrayList<Label>());
+		setbacklogtasklist(tasklist);
+		for (Card c : tasklist) {
+			this.setCard((trello.getCard(c.getId())));
+			this.setLabelList((trello.getCard(c.getId())));
+			this.setMembersIDs((trello.getCard(c.getId())));
+			this.setDueDate((Date) (trello.getCard(c.getId())).getDue());
+		}
 	}
 
 	public CardFunctions(Card card) {
 		this.setCard(card);
-		this.setLabelList(card.getLabels());
-		this.setMembersIDs(card.getIdMembers()); // --------> obter Membros associado
+
+		this.setLabelList(card);
+		this.setMembersIDs(card); // --------> obter Membros associado
 		this.setDueDate((Date) card.getDue());
+	}
+
+	///// descobrir funcao pa obter lista de tarefas do backlog
+	private void setbacklogtasklist(List<Card> tasklist) {
+		// ver comando lista tasks productbacklog pra ja fica este
+		tasklist = new ArrayList<>();
 	}
 
 	@Override
@@ -49,28 +64,26 @@ public abstract class CardFunctions implements Times {
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String idMmber) {
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
 		return false;
 	}
 
 	@Override
-	public double membergetTimeSpent(String idMember) {
+	public double membergetTimeSpent(String memberUsername, Card card, String idmember) {
 		return 0;
 	}
 
 	@Override
-	public double membergetTimeEstimated(String idMember) {
+	public double membergetTimeEstimated(String memberUsername) {
 		return 0;
 	}
 
 	/* GETTERS & SETTERS */
 
-	public Card getCard() {
-		return card;
-	}
-
 	public void setCard(Card card) {
-		this.card = card;
+
+		this.card = trello.getCard(card.getId());
+		;
 	}
 
 	public Date getDueDate() {
@@ -85,15 +98,31 @@ public abstract class CardFunctions implements Times {
 		return labelList;
 	}
 
-	public void setLabelList(List<Label> labelList) {
-		this.labelList = labelList;
+	public void setLabelList(Card card) {
+		this.labelList = trello.getBoardLabels(card.getIdBoard());
+
+	}
+
+	public Card getCard() {
+		return card;
 	}
 
 	public List<String> getMembersIDs() {
-		return membersIDs;
+		for (Member m : members)
+			membersIDs.add(m.getId());
+		return this.membersIDs;
 	}
 
-	public void setMembersIDs(List<String> membersIDs) {
-		this.membersIDs = membersIDs;
+	public void setMembersIDs(Card card) {
+		// for (Member m : trello.getCardMembers(card.getId())) {
+		// this.membersIDs.add(m.getId());
+		// }
+		members = trello.getCardMembers(card.getId());
 	}
+
+	public double getTimeSpent(Card card) {
+
+		return timeSpent;
+	}
+
 }

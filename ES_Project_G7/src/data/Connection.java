@@ -15,6 +15,8 @@ public interface Connection {
 
 	void getData();
 	
+	void assumeData() throws IOException;
+	
 	void connectTo() throws IOException;
 
 	boolean connected();

@@ -1,24 +1,36 @@
 package work;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 
-public class ProductBacklog extends CardFunctions {
+import data.TrelloConnect;
+import gui.MainWindow;
 
-	private List<Task> taskList;
+public class ProductBacklog extends CardFunctions {
+	private TrelloConnect trelloconnect = MainWindow.getFrame().getTrelloConnect();
+	private Trello trello = trelloconnect.getTrello();
+	private List<Card> taskList;
 
 	public ProductBacklog() {
 		super();
-		this.taskList = new ArrayList<Task>();
+
+	}
+
+	public void getListtarefa(String sprintName) {
+		this.taskList = trelloconnect.listCardsSprint(trelloconnect.getSprint(sprintName));
 	}
 
 	@Override
 	public double getTimeSpent() {
 		double timeSpent = 0;
-		for (Task t : this.taskList) {
+		// getListtarefa(");
+		for (Card c : this.taskList) {
+			Task t = new Task(c);
 			if (t.hasTimeSpent())
 				timeSpent += t.getTimeSpent();
 		}
@@ -28,38 +40,60 @@ public class ProductBacklog extends CardFunctions {
 	@Override
 	public double getTimeEstimated() {
 		double estimatedTime = 0;
-		for (Task t : this.taskList) {
+		for (Card c : this.taskList) {
+			Task t = new Task(c);
 			estimatedTime += t.getTimeEstimated();
 		}
 		return estimatedTime;
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String idMember) {
-		if (membergetTimeSpent(idMember) == 0)
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
+
+		if (membergetTimeSpent(memberUsername, card, idmember) == 0)
 			return false;
 		else
 			return true;
 	}
 
 	@Override
-	public double membergetTimeSpent(String idMember) {
+	public double membergetTimeSpent(String memberUsername, Card card, String idmember) {
 		double timeSpent = 0;
-		for (Task t : this.taskList) {
+		for (Card c : this.taskList) {
+			Task t = new Task(c);
 			if (t.hasTimeSpent())
-				timeSpent += t.membergetTimeSpent(idMember);
+				timeSpent += t.membergetTimeSpent(memberUsername, card, idmember);
 		}
 		return timeSpent;
 
 	}
 
 	@Override
-	public double membergetTimeEstimated(String idMember) {
+	public double membergetTimeEstimated(String memberUsername) {
 		double estimatedTime = 0;
-		for (Task t : this.taskList) {
-			estimatedTime += t.membergetTimeEstimated(idMember);
+		for (Card c : this.taskList) {
+			Task t = new Task(c);
+			estimatedTime += t.membergetTimeEstimated(memberUsername);
 		}
 		return estimatedTime;
 
+	}
+
+	@Override
+	public double getTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean hasTimeSpent(String sprintName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double membergetTimeSpent(String memberUsername, String idmember, String sprintName) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

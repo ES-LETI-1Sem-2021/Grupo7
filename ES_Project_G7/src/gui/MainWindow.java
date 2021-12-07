@@ -21,7 +21,7 @@ public class MainWindow extends JFrame {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;
 
-	private int page_number = 0;
+	private int pageNumber = 0;
 
 	private TrelloConnect trello;
 	private GitConnect github;
@@ -49,13 +49,14 @@ public class MainWindow extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		if (page_number == 0)
+		if (pageNumber == 0)
 			initialize();
 //		pack();
 	}
 
 	/**
-	 * Initialization of GUI.
+	 * Initialization of GUI and submission of login data to Trello and GitHub.
+	 * Makes the "request" to initialize the next section (window).
 	 * 
 	 * @throws IOException
 	 */
@@ -63,23 +64,22 @@ public class MainWindow extends JFrame {
 		trello = new TrelloConnect(this.getContentPane());
 		github = new GitConnect(trello.getLayout());
 		
-		Button button = new Button("LOGIN");
-			
-//		button.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				dispose();
-//				try {
-//					github = new GitConnect(MainWindow.getFrame());
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
-//			}	
-//		});
-//		add(button);
+		Button button = new Button("SUBMIT");
 		
-//		Layout layout = new Layout(LayoutType.LAYOUT_BORDER, this, BorderLayout.LINE_END, button);
-//		Layout layout = new Layout(LayoutType.LAYOUT_SPRING, JPanel.TOP_ALIGNMENT, this, button);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				try {
+					pageNumber++;
+					trello.assumeData();
+					github.assumeData();
+					getInstance();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		github.getLayout().addToSpringLayout(button, 300);
 	}
 
 	/**
