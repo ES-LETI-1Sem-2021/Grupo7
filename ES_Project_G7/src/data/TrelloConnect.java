@@ -50,7 +50,6 @@ public class TrelloConnect implements Connection {
 		getDataLayout(pane);
 		board.setName(boardName);
 		connected = false;
-		System.out.println(getSprintDates(getSprint("1st Sprint")));
 	}
 
 	/**
