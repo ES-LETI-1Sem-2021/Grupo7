@@ -9,11 +9,11 @@ import appearence.Layout;
 import gui.MainWindow;
 
 public interface Connection {
-	void getDataLayout(Container pane);
+	void getDataLayout(Container pane) throws IOException;
 	
-	void getDataLayout(Layout layout);
+	void getDataLayout(Layout layout) throws IOException;
 
-	void getData();
+	void getData() throws IOException;
 	
 	void assumeData() throws IOException;
 	
