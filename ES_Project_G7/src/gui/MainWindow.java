@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.swing.*;
 
+import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Member;
 import com.julienvey.trello.domain.TList;
 
@@ -14,6 +15,9 @@ import java.awt.event.ActionListener;
 
 import appearence.*;
 import appearence.TextField;
+import charts.HumanitaryCost;
+import charts.PieChartEstimatedTimeporSprint;
+import charts.PieChartTimeporSprint;
 import data.*;
 
 @SuppressWarnings("serial")
@@ -26,7 +30,7 @@ public class MainWindow extends JFrame {
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
 	private static final int BTN_LEFT = 50;
-	private static final int BTN_RIGHT = BTN_LEFT+50;
+	private static final int BTN_RIGHT = BTN_LEFT + 50;
 
 	private TrelloConnect trello;
 	private GitConnect github;
@@ -76,11 +80,10 @@ public class MainWindow extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		
-		
+
 		trello = new TrelloConnect(this.getContentPane());
 		github = new GitConnect(trello.getLayout());
-		
+
 		JButton submit = new JButton("SUBMIT");
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -147,10 +150,10 @@ public class MainWindow extends JFrame {
 		defineWindow(-135, -155);
 
 		layout = new Layout(LayoutType.LAYOUT_SPRING, this.getContentPane());
-		
+
 		layout.addToSpringLayout_xCentered(new TextLabel("Board members", 10, FontType.FONT_BOLD), 15);
 		addStringsToLayout(trello.getMembers().split("\n"), 20);
-		
+
 		TextLabel text = new TextLabel("Insert here the name of the sprint from which you want", 15,
 				FontType.FONT_BOLD);
 		TextLabel text2 = new TextLabel("to gather information from.", 15, FontType.FONT_BOLD);
@@ -185,13 +188,86 @@ public class MainWindow extends JFrame {
 	private void trelloSprintOptions(String sprintName) {
 		TList sprint = trello.getSprint(sprintName);
 
-		addStringsToLayout(trello.getSprintDates(sprint), 15);
+		layout.addToSpringLayout_xCentered(new TextLabel(sprintName, 10, FontType.FONT_TITLE), 15);
+
+		JButton sprintPlann = new JButton("CHECK PLANNING");
+		layout.addToSpringLayout(sprintPlann, 400, 100);
+		sprintPlann.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintPlanningDesc(sprint),
+						sprintName + " | Sprint Planning", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		JButton sprintReview = new JButton("CHECK REVIEW");
+		layout.addToSpringLayout_xCentered(sprintReview, 400);
+		sprintReview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintReviewDesc(sprint), sprintName + " | Sprint Review",
+						JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		JButton sprintRetrospective = new JButton("CHECK RETROSPECTIVE");
+		layout.addToSpringLayout(sprintRetrospective, 400, 600);
+		sprintRetrospective.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintRetrospectiveDesc(sprint),
+						sprintName + " | Sprint Retrospective", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		getTasks(sprint);
+		showTimePerSprint(sprintName);
+		showEstimatedTimePerSprint(sprintName);
+		showHumanitaryCostPerSprint(sprintName);
+		addStringsToLayout(trello.getPBEachSprint(sprint), 250);
 		
-		// Descrição: Planning, Review e Retrospective
-		// Mostrar: tarefas do sprint
-		// Número de horas + gráficos + custo
-		// ProductBacklog(?)
 		
+		setVisible(true);
+	}
+
+	private void showTimePerSprint(String sprintName) {
+		SwingUtilities.invokeLater(() -> {
+			PieChartTimeporSprint example = new PieChartTimeporSprint("Tempo por Sprint", sprintName);
+			example.setSize(800, 400);
+			example.setLocationRelativeTo(null);
+			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			example.setVisible(true);
+
+		});
+	}
+	
+	private void showEstimatedTimePerSprint(String sprintName) {
+		SwingUtilities.invokeLater(() -> {
+			PieChartEstimatedTimeporSprint example = new PieChartEstimatedTimeporSprint("Tempo estimado por Sprint", sprintName);
+			example.setSize(800, 400);
+			example.setLocationRelativeTo(null);
+			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			example.setVisible(true);
+
+		});
+	}
+	
+	private void showHumanitaryCostPerSprint(String sprintName) {
+		SwingUtilities.invokeLater(() -> {
+			HumanitaryCost example = new HumanitaryCost("Custo do Sprint", sprintName);
+			example.setSize(800, 400);
+			example.setLocationRelativeTo(null);
+			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			example.setVisible(true);
+
+		});
+	}
+
+	private void getTasks(TList sprint) {
+		int i = 50;
+		for (Card c : trello.listCardsSprint(sprint)) {
+			layout.addToSpringLayout_xCentered(new TextLabel(c.getName(), 12, FontType.FONT_REGULAR), i);
+			i += 15;
+		}
+		setVisible(true);
+
 	}
 
 	private void addStringsToLayout(String[] strings, int startingPoint) {
@@ -213,18 +289,19 @@ public class MainWindow extends JFrame {
 
 		TextLabel projectName = new TextLabel(github.getProjectIentification(), 15, FontType.FONT_TITLE);
 		layout.addToSpringLayout_xCentered(projectName, 15);
-		TextLabel startingDate = new TextLabel("Created at " + github.getProjectStartDate().toString(), 13, FontType.FONT_BOLD);
-		layout.addToSpringLayout_xCentered(startingDate, 40);		
+		TextLabel startingDate = new TextLabel("Created at " + github.getProjectStartDate().toString(), 13,
+				FontType.FONT_BOLD);
+		layout.addToSpringLayout_xCentered(startingDate, 40);
 		addStringsToLayout(github.getProjectDescription(), 65);
 //		addStringsToLayout(github.getTagsWithDate(), 60);
 //		commits();
-		
+
 		buttonToChooseView();
 		setVisible(true);
 	}
 
 	private void commits() {
-		
+
 //		JButton getCommits = new JButton("GET COMMITS");
 //		layout.addToSpringLayout(getCommits, BTN_LEFT, 100);
 //		getCommits.addActionListener(new ActionListener() {
@@ -264,7 +341,7 @@ public class MainWindow extends JFrame {
 	public TrelloConnect getTrelloConnect() {
 		return trello;
 	}
-	
+
 	public GitConnect getGitConnect() {
 		return github;
 	}

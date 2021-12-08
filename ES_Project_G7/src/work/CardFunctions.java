@@ -1,11 +1,14 @@
 package work;
 
+import java.util.ArrayList;
 import java.util.*;
 
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Card;
 import com.julienvey.trello.domain.Label;
 import com.julienvey.trello.domain.Member;
+import com.julienvey.trello.impl.TrelloImpl;
+import com.julienvey.trello.impl.http.ApacheHttpClient;
 
 import gui.MainWindow;
 import timings.Times;
@@ -39,13 +42,21 @@ public abstract class CardFunctions implements Times {
 		this.setDueDate((Date) card.getDue());
 	}
 
-	///// descobrir funcao pa obter lista de tarefas do backlog
+	/**
+	 * Set backlog tasklist
+	 * 
+	 * @param tasklist
+	 */
 	private void setbacklogtasklist(List<Card> tasklist) {
-		// ver comando lista tasks productbacklog pra ja fica este
+
 		tasklist = new ArrayList<>();
 	}
 
 	@Override
+	/**
+	 * check timespent
+	 * 
+	 */
 	public boolean hasTimeSpent() {
 		if (getTimeSpent() == 0)
 			return false;
@@ -123,6 +134,11 @@ public abstract class CardFunctions implements Times {
 	public double getTimeSpent(Card card) {
 
 		return timeSpent;
+	}
+
+	public double membergetTimeEstimated(String memberUsername, Card card, String idmember) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

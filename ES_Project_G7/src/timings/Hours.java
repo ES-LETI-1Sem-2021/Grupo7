@@ -18,6 +18,8 @@ public class Hours implements MemberTimes {
 
 	public Hours(Member membro, Card card) {
 		setMember(membro, card);
+
+		;
 	}
 
 	public Member getMember() {
@@ -58,22 +60,19 @@ public class Hours implements MemberTimes {
 
 	@Override
 	public double membergetTimeEstimated() {
-		///////////////////////////////////////////////
-		// Obter tempo estimado
-
 		for (Action a : trello.getCard(card.getId()).getActions()) {
-
 			String data = a.getData().getText();
 			if (data != null) {
 				if (!data.contains("@global")) {
 					String[] auxiliar = data.split("/");
-					String[] auxiliar2 = auxiliar[0].split("!");
-					timeSpent = timeSpent + Double.parseDouble(auxiliar2[1]);
+					String[] auxiliar2 = auxiliar[1].split(" ");
+					timeSpent = timeSpent + Double.parseDouble(auxiliar2[0]);
+
 				}
 			}
 		}
 
-		return timeEstimated;
+		return timeSpent;
 	}
 
 	public String getCardId() {
