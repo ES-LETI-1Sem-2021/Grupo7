@@ -75,9 +75,10 @@ public class TrelloConnect implements Connection {
 	 * @param pane Uses a <code>Container</code> as base to define where will be
 	 *             created the new <code>Layout</code> (which is the layout
 	 *             instance).
+	 * @throws IOException 
 	 */
 	@Override
-	public void getDataLayout(Container pane) {
+	public void getDataLayout(Container pane) throws IOException {
 		getData();
 		layout = new Layout(LayoutType.LAYOUT_SPRING, pane, title, labels, textFields, STARTING_POINT);
 	}
@@ -88,9 +89,10 @@ public class TrelloConnect implements Connection {
 	 * @param layout Uses a <code>Layout</code> as base to define where will be
 	 *               added the <code>getData()</code> function and defines it as the
 	 *               layout instance.
+	 * @throws IOException 
 	 */
 	@Override
-	public void getDataLayout(Layout layout) {
+	public void getDataLayout(Layout layout) throws IOException {
 		getData();
 		this.layout = layout;
 
@@ -100,9 +102,10 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello data from user in order to establish connection.
+	 * @throws IOException 
 	 */
 	@Override
-	public void getData() {
+	public void getData() throws IOException {
 		title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Access Key: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
@@ -115,6 +118,8 @@ public class TrelloConnect implements Connection {
 		this.labels = labels;
 		TextField[] textFields = { login, accessToken, cardBoard };
 		this.textFields = textFields;
+		
+		assumeData();
 	}
 
 	/**
@@ -159,13 +164,13 @@ public class TrelloConnect implements Connection {
 					return "Nome: " + m.getFullName() + " | Username: @" + m.getUsername();
 				}
 			}
-		return "Não foram encontrados membros.";
+		return "Nï¿½o foram encontrados membros.";
 	}
 
 	/**
 	 * Updates the list of Trello's columns (Lists).
 	 */
-	private void getSprints() {
+	private void getLists() {
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
 		for (Board bd : allBoards)
 			if (bd.getName().equals(boardName)) {
@@ -184,7 +189,7 @@ public class TrelloConnect implements Connection {
 	 * @return
 	 */
 	public TList getSprint(String sprintName) {
-		getSprints();
+		getLists();
 		for (TList list : sprints)
 			if (list.getName().contains(sprintName))
 				return list;
