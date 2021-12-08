@@ -2,15 +2,9 @@ package gui;
 
 import java.io.IOException;
 
-import java.awt.event.*;
-
-public class Main implements ActionListener {
+public class Main {
 
 	public static void main(String[] args) throws IOException {
 		MainWindow w = MainWindow.getInstance();
-	}
-
-	public void actionPerformed(ActionEvent e) {
-
 	}
 }

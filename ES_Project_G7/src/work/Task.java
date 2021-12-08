@@ -6,7 +6,10 @@ import java.util.*;
 import com.julienvey.trello.Trello;
 import com.julienvey.trello.domain.Action;
 import com.julienvey.trello.domain.Card;
+import com.julienvey.trello.domain.Label;
 import com.julienvey.trello.domain.Member;
+import com.julienvey.trello.impl.TrelloImpl;
+import com.julienvey.trello.impl.http.ApacheHttpClient;
 
 import data.TrelloConnect;
 import gui.MainWindow;
@@ -30,6 +33,13 @@ public class Task extends CardFunctions {
 
 	}
 
+	/**
+	 * Check card member using username
+	 * 
+	 * @param id
+	 * @param card
+	 * @return
+	 */
 	public Member getmembrodocardpeloUsername(String id, Card card) {
 		this.card = card;
 		for (Member m : trello.getCardMembers(card.getId())) {
@@ -54,6 +64,10 @@ public class Task extends CardFunctions {
 	}
 
 	@Override
+	/**
+	 * Check timespent on a task
+	 * 
+	 */
 	public double getTimeSpent() {
 		double timeSpent = 0;
 		for (Action a : trello.getCardActions(this.getCardId())) {
@@ -74,14 +88,24 @@ public class Task extends CardFunctions {
 	/////// public void getCardHoursListestimated(this.getCard(Card card) {}
 
 	@Override
+	/**
+	 * Check estimated time on a task
+	 * 
+	 */
 	public double getTimeEstimated() {
-		/////// getCardHoursListestimated(this.getCard());
-		double estimatedTime = 0;
-		for (Hours h : cardhoursList) {
-			if (h.getCardId().equals(this.getCard().getId()))
-				estimatedTime += h.membergetTimeEstimated();
+		double timeSpent = 0;
+		for (Action a : trello.getCardActions(this.getCardId())) {
+			if (a.getData().getText() != null) {
+				String data = a.getData().getText();
+				if (!data.contains("@global")) {
+					String[] auxiliar = data.split("/");
+					String[] auxiliar2 = auxiliar[1].split(" ");
+					timeSpent = timeSpent + Double.parseDouble(auxiliar2[0]);
+				}
+			}
 		}
-		return estimatedTime;
+
+		return timeSpent;
 	}
 
 	public String getCardId() {
@@ -89,6 +113,13 @@ public class Task extends CardFunctions {
 	}
 
 	@Override
+	/**
+	 * Check if a member has timespent on a task
+	 * 
+	 * @param memberUsername
+	 * @param card
+	 * @param idmember
+	 */
 	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
 		this.card = card;
 		if (membergetTimeSpent(memberUsername, card, idmember) != 0)
@@ -96,6 +127,14 @@ public class Task extends CardFunctions {
 		else
 			return false;
 	}
+
+	/**
+	 * Auxiliary function to initialize the hours list
+	 * 
+	 * @param memberUsername
+	 * @param card
+	 * @param idmember
+	 */
 
 	public void getHoursList(String memberUsername, Card card, String idmember) {
 		this.card = card;
@@ -110,6 +149,13 @@ public class Task extends CardFunctions {
 	}
 
 	@Override
+	/**
+	 * Check timespent of a specified member
+	 * 
+	 * @param memberUsername
+	 * @param card
+	 * @param idmember
+	 */
 	public double membergetTimeSpent(String memberUsername, Card card, String idmember) {
 		this.card = card;
 		getHoursList(memberUsername, this.card, idmember);
@@ -124,23 +170,31 @@ public class Task extends CardFunctions {
 		}
 		return timeSpent;
 	}
-	//////////////////////////////////////////////
-	// public void getHoursListestimadas(String memberUsername,Card card) {
 
 	@Override
-	public double membergetTimeEstimated(String memberUsername) {
-		// getHoursListestimadas(membro do id,this.getCard);
-		double estimatedTime = 0;
+	/**
+	 * Check estimated timespent of a specified member
+	 * 
+	 * @param memberUsername
+	 * @param card
+	 * @param idmember
+	 */
+	public double membergetTimeEstimated(String memberUsername, Card card, String idmember) {
+		this.card = card;
+		getHoursList(memberUsername, this.card, idmember);
+		double timeSpent = 0;
 		for (Hours h : memberhoursList) {
-			if (h.getCardId().equals(this.getCard().getId())) {
-				// if (h.getUtilizador().equals(memberUsername))
-				estimatedTime += h.membergetTimeEstimated();
+
+			if (h.getMember().getUsername().equals(memberUsername)) {
+
+				timeSpent += h.membergetTimeEstimated();
+
 			}
 		}
-		return estimatedTime;
-
+		return timeSpent;
 	}
 
+	// teste tempo normal
 	public static void main(String[] args) throws IOException {
 
 		TrelloConnect trelloconnect = MainWindow.getInstance().getTrelloConnect();
@@ -158,6 +212,17 @@ public class Task extends CardFunctions {
 		}
 		System.out.println("Tempo Total da Task");
 		System.out.println(t.getTimeSpent());
+
+		// teste tempo estimmado
+		for (Member m : trello.getCardMembers(c.getId())) {
+
+			if (m.getUsername().equals("tiagoalmeida01")) {
+				System.out.println("Tempo gasto estimado pelo Tiago");
+				System.out.println(t.membergetTimeEstimated("tiagoalmeida01", c, m.getId()));
+			}
+		}
+		System.out.println("Tempo Total estimado da Task");
+		System.out.println(t.getTimeEstimated());
 	}
 
 	@Override

@@ -34,10 +34,20 @@ public class Sprint implements Times {
 		return sprint;
 	}
 
+	/**
+	 * Tasklist of a sprint
+	 * 
+	 * @param sprintName
+	 */
 	public void getListtarefa(String sprintName) {
 		this.taskList = trelloconnect.listCardsSprint(trelloconnect.getSprint(sprintName));
 	}
 
+	/**
+	 * List of members ids
+	 * 
+	 * @return
+	 */
 	private List<String> getMembersIDs() {
 
 		taskList = trello.getListCards(getSprint());
@@ -52,6 +62,13 @@ public class Sprint implements Times {
 	}
 
 	@Override
+	/**
+	 * Check timespent of a sprint
+	 * 
+	 * @param sprintName
+	 * 
+	 * @return
+	 */
 	public boolean hasTimeSpent(String sprintName) {
 		if (getTimeSpent(sprintName) == 0)
 			return false;
@@ -60,6 +77,12 @@ public class Sprint implements Times {
 	}
 
 	@Override
+	/**
+	 * Get timespent of a sprint
+	 * 
+	 * @param sprintName
+	 * @return
+	 */
 	public double getTimeSpent(String sprintName) {
 		double timeSpent = 0;
 		getListtarefa(sprintName);
@@ -79,32 +102,76 @@ public class Sprint implements Times {
 		return timeSpent;
 	}
 
-	public double getTimeEstimated() {
-		double estimatedTime = 0;
+	/**
+	 * Get estimated times of a sprint
+	 * 
+	 * @param sprintName
+	 * @return
+	 */
+	public double getTimeEstimated(String sprintName) {
+		double timeSpent = 0;
+		getListtarefa(sprintName);
 		for (Card c : this.taskList) {
-			Task t = new Task(c);
-			estimatedTime += t.getTimeEstimated();
+			for (Action a : trello.getCardActions(c.getId())) {
+				if (a.getData().getText() != null) {
+					String data = a.getData().getText();
+					if (!data.contains("@global")) {
+						String[] auxiliar = data.split("/");
+						String[] auxiliar2 = auxiliar[1].split(" ");
+						timeSpent = timeSpent + Double.parseDouble(auxiliar2[0]);
+					}
+				}
+			}
 		}
-		return estimatedTime;
+
+		return timeSpent / 3;
+	}
+
+	/**
+	 * Check estimated time of a member in a specified sprint
+	 * 
+	 * @param memberUsername
+	 * @param idmember
+	 * @param sprintName
+	 * @return
+	 * 
+	 */
+	public double membergetTimeEstimated(String memberUsername, String idmember, String sprintName) {
+		double timeSpent = 0;
+		double timeSpent2 = 0;
+		double timeSpentaux3 = 0;
+		for (Card card : this.taskList) {
+			List<Hours> memberhoursListaux = new ArrayList<>();
+			for (Member m : trello.getCardMembers(card.getId())) {
+				if (m.getId().equals(idmember))
+					memberhoursListaux.add(new Hours(m, card));
+			}
+			List<Hours> memberhoursList = memberhoursListaux;
+			for (Hours h : memberhoursList) {
+				if (h.getMember().getUsername().equals(memberUsername)) {
+					timeSpent += h.membergetTimeEstimated();
+				}
+				timeSpent2 = timeSpent + timeSpent2;
+			}
+
+		}
+		return timeSpent / 4;
 	}
 
 	@Override
-	public double membergetTimeEstimated(String memberUsername) {
-		double estimatedTime = 0;
-		for (Card c : this.taskList) {
-			Task t = new Task(c);
-			estimatedTime += t.membergetTimeEstimated(memberUsername);
-		}
-		return estimatedTime;
-
-	}
-
-	@Override
+	/**
+	 * Check timespent of a member in a specified sprint
+	 * 
+	 * @param memberUsername
+	 * @param idmember
+	 * @param sprintName
+	 * @return
+	 */
 	public double membergetTimeSpent(String memberUsername, String idmember, String sprintName) {
 
 		double timeSpent = 0;
 		double timeSpent2 = 0;
-		double timeSpentaux3 = 0;
+
 		for (Card card : this.taskList) {
 			List<Hours> memberhoursListaux = new ArrayList<>();
 			for (Member m : trello.getCardMembers(card.getId())) {
@@ -123,31 +190,30 @@ public class Sprint implements Times {
 		return timeSpent / 2;
 	}
 
-	@Override
-	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
-		if (membergetTimeSpent(memberUsername, card, idmember) == 0)
-			return false;
-		else
-			return true;
-
-	}
-
 	public static void main(String[] args) throws IOException {
 		TrelloConnect trelloconnect = MainWindow.getInstance().getTrelloConnect();
 		Trello trello = trelloconnect.getTrello();
-		double aux = 0;
 		Sprint sprint = new Sprint();
 		System.out.println("Tempo Total da Sprint");
-		System.out.println(sprint.getTimeSpent("3rd Sprint"));
+		System.out.println(sprint.getTimeSpent("2nd Sprint"));
 		String id = null;
-		for (Card card : trelloconnect.listCardsSprint(trelloconnect.getSprint("3rd Sprint"))) {
+		for (Card card : trelloconnect.listCardsSprint(trelloconnect.getSprint("2nd Sprint"))) {
 			for (Member m : trello.getCardMembers(card.getId())) {
 				if (m.getUsername().equals("tiagoalmeida01"))
 					id = m.getId();
 			}
 		}
-		System.out.println(sprint.membergetTimeSpent("tiagoalmeida01", id, "3rd Sprint"));
+		System.out.println(sprint.membergetTimeSpent("tiagoalmeida01", id, "2nd Sprint"));
 
+		System.out.println("Tempo Total da Sprint");
+		System.out.println(sprint.getTimeEstimated("2nd Sprint"));
+		for (Card card : trelloconnect.listCardsSprint(trelloconnect.getSprint("2nd Sprint"))) {
+			for (Member m : trello.getCardMembers(card.getId())) {
+				if (m.getUsername().equals("tiagoalmeida01"))
+					id = m.getId();
+			}
+		}
+		System.out.println(sprint.membergetTimeEstimated("tiagoalmeida01", id, "2nd Sprint"));
 	}
 
 	@Override
@@ -170,6 +236,24 @@ public class Sprint implements Times {
 
 	public List<Double> getArray() {
 		return array;
+	}
+
+	@Override
+	public double getTimeEstimated() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double membergetTimeEstimated(String memberUsername) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

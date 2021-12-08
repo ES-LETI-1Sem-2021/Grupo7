@@ -15,7 +15,14 @@ public class Layout extends JPanel {
 
 	private static final int LEFT_SPACE = 5;
 	private static final int SPACE_TO_FIELD = 150;
-//	private static final int GAP = 5;                    //para usar com GridLayout
+	private static final int GAP = 5; // para usar com GridLayout
+
+	public Layout(LayoutType layoutType, Container pane) {
+		super(layoutType.getLayout(), true);
+		this.pane = pane;
+		this.layoutType = layoutType;
+		createLayout();
+	}
 
 	/**
 	 * Create a Layout from scratch.
@@ -41,6 +48,21 @@ public class Layout extends JPanel {
 		createLayout(title, labels, textFields, startingPoint);
 	}
 
+/////////////////
+//Layout creation
+////////////////	
+
+	private void createLayout() {
+		if (layoutType == LayoutType.LAYOUT_SPRING) {
+			this.layout = new SpringLayout();
+			pane.setLayout((LayoutManager) this.layout);
+		} else if (layoutType == LayoutType.LAYOUT_GRID) {
+			this.layout = new GridLayout(1, 2, GAP, GAP);
+			pane.setLayout((LayoutManager) this.layout);
+		} else
+			throw new NullPointerException("Wrong Layout.");
+	}
+
 	/**
 	 * In order to add elements to a Layout, it has to verify which will be the
 	 * LayoutType and then if there's a previous Layout to work on as a base. If it
@@ -60,9 +82,9 @@ public class Layout extends JPanel {
 			this.layout = new SpringLayout();
 			pane.setLayout((LayoutManager) this.layout);
 			addToSpringLayout(title, labels, textFields, startingPoint);
-//		} else if (layoutType == LayoutType.LAYOUT_GRID) {
-//			this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
-//			pane.setLayout((LayoutManager) this.layout);
+		} else if (layoutType == LayoutType.LAYOUT_GRID) {
+			this.layout = new GridLayout(1 + labels.length + textFields.length, 2, GAP, GAP);
+			pane.setLayout((LayoutManager) this.layout);
 		} else
 			throw new NullPointerException("Wrong Layout.");
 	}
@@ -70,6 +92,38 @@ public class Layout extends JPanel {
 /////////////////
 //SpringLayout
 ////////////////
+
+	/**
+	 * 
+	 * @param comp
+	 * @param positionX
+	 * @param positionY
+	 */
+	public void addToSpringLayout(Component comp, int positionX, int positionY) {
+		pane.add(comp);
+		((SpringLayout) layout).putConstraint(SpringLayout.WEST, comp, positionX, SpringLayout.HORIZONTAL_CENTER, pane);
+		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, comp, positionY, SpringLayout.NORTH, pane);
+	}
+
+	/**
+	 * 
+	 * @param comp
+	 * @param positionY
+	 */
+	public void addToSpringLayout_xCentered(Component comp, int positionY) {
+		pane.add(comp);
+		((SpringLayout) layout).putConstraint(SpringLayout.HORIZONTAL_CENTER, comp, 0, SpringLayout.HORIZONTAL_CENTER,
+				pane);
+		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, comp, positionY, SpringLayout.NORTH, pane);
+	}
+
+	public void addToSpringLayout(Component[] comps, int startingPoint, int distance) {
+		for (int obj = 0; obj < comps.length; obj++) {
+			pane.add(comps[obj]);
+			addToSpringLayout_xCentered(comps[obj], startingPoint);
+			startingPoint += distance;
+		}
+	}
 
 	/**
 	 * Add elements to the SpringLayout.
@@ -96,15 +150,6 @@ public class Layout extends JPanel {
 			startingPoint += 25;
 		}
 	}
-	
-	/*
-	 *
-	 */
-	public void addToSpringLayout(Button button, int positionY) {
-		pane.add(button);
-		((SpringLayout) layout).putConstraint(SpringLayout.HORIZONTAL_CENTER, button, 0, SpringLayout.HORIZONTAL_CENTER, pane);
-		((SpringLayout) layout).putConstraint(SpringLayout.NORTH, button, positionY, SpringLayout.NORTH, pane);
-	}
 
 	/**
 	 * Auxiliary function to put constraints to elements in SpringLayout.
@@ -126,6 +171,14 @@ public class Layout extends JPanel {
 	}
 
 /////////////////
+//GridLayout
+////////////////
+
+	public void addToGridLayout(Component comp) {
+		pane.add(comp);
+	}
+
+/////////////////
 //Getters & Setters
 ////////////////
 
@@ -135,7 +188,7 @@ public class Layout extends JPanel {
 	public Container getPane() {
 		return pane;
 	}
-	
+
 	/**
 	 * Get LayoutType implemented in the Layout.
 	 */
