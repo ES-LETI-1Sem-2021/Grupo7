@@ -238,6 +238,10 @@ public class MainWindow extends JFrame {
 	public TrelloConnect getTrelloConnect() {
 		return trello;
 	}
+	
+	public GitConnect getGitConnect() {
+		return github;
+	}
 
 	/**
 	 * Get horizontal location of the window.
