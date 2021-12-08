@@ -22,7 +22,7 @@ public class Sprint implements Times {
 	private String sprint;
 	private List<Double> array = new ArrayList<>();
 	private List<Card> taskList;
-	private MainWindow main;
+	private MainWindow  main;
 
 	public Sprint() {
 		this.membersIDs = new ArrayList<String>();
