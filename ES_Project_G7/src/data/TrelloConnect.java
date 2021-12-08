@@ -6,6 +6,7 @@ import appearence.TextField;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.julienvey.trello.Trello;
@@ -24,6 +25,7 @@ public class TrelloConnect implements Connection {
 	private TextLabel[] labels;
 	private TextField[] textFields;
 	private Board board = new Board();
+
 	private List<Member> members = new ArrayList<>();
 	private List<TList> sprints = new ArrayList<>();
 	private List<Card> cardsSprint = new ArrayList<>();
@@ -32,46 +34,36 @@ public class TrelloConnect implements Connection {
 	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
 	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
 	private String boardName = "ES Project";
-	private String boardID = "614de795e5e8b75fb65a9cdc";
 
 /////////////////
 //Constructors
 ////////////////
 
-	/** 
+	/**
 	 * Create TrelloConnect without any previous Layout made.
 	 * 
-	 * @param <code>pane</code> Uses a Container as base to define where the
-	 *                          implementation of the getData() functions.
-	 * 
+	 * @param pane Uses a <code>Container</code> as base to define where the
+	 *             implementation of the <code>getData()</code> functions.
 	 * @throws IOException
 	 */
 	public TrelloConnect(Container pane) throws IOException {
 		getDataLayout(pane);
-		connected = false;
-		connectTo();
 		board.setName(boardName);
-		//getMembers(boardName);
-		//teste();
-		//getSprints();
-		//getCardsFromSprint(getSprint("4th Sprint"));
+		connected = false;
+		getAllSprints();
 	}
 
 	/**
 	 * Create TrelloConnect when there's already a Layout.
 	 * 
-	 * @param <code>layout</code> Uses a predefined layout as a parameter, to define
-	 *                            where will be added the getData() functions.
-	 * 
+	 * @param layout Uses a predefined <code>Layout</code> as a parameter, to define
+	 *               where will be added the <code>getData()</code> functions.
 	 * @throws IOException
 	 */
 	public TrelloConnect(Layout layout) throws IOException {
 		getDataLayout(layout);
+		board.setName(boardName);
 		connected = false;
-		connectTo();
-		//getMembers(boardName);
-		
-		
 	}
 
 /////////////////
@@ -81,12 +73,13 @@ public class TrelloConnect implements Connection {
 	/**
 	 * Get Trello data when there's no previous layout.
 	 * 
-	 * @param <code>pane</code> Uses a Container as base to define where will be
-	 *                          created the new Layout (which is the layout
-	 *                          instance).
+	 * @param pane Uses a <code>Container</code> as base to define where will be
+	 *             created the new <code>Layout</code> (which is the layout
+	 *             instance).
+	 * @throws IOException
 	 */
 	@Override
-	public void getDataLayout(Container pane) {
+	public void getDataLayout(Container pane) throws IOException {
 		getData();
 		layout = new Layout(LayoutType.LAYOUT_SPRING, pane, title, labels, textFields, STARTING_POINT);
 	}
@@ -94,12 +87,13 @@ public class TrelloConnect implements Connection {
 	/**
 	 * Get Trello data when exists a previous layout.
 	 * 
-	 * @param <code>pane</code> Uses a Layout as base to define where will be added
-	 *                          the getData() function and defines it as the layout
-	 *                          instance.
+	 * @param layout Uses a <code>Layout</code> as base to define where will be
+	 *               added the <code>getData()</code> function and defines it as the
+	 *               layout instance.
+	 * @throws IOException
 	 */
 	@Override
-	public void getDataLayout(Layout layout) {
+	public void getDataLayout(Layout layout) throws IOException {
 		getData();
 		this.layout = layout;
 
@@ -109,9 +103,11 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello data from user in order to establish connection.
+	 * 
+	 * @throws IOException
 	 */
 	@Override
-	public void getData() {
+	public void getData() throws IOException {
 		title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Access Key: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
@@ -124,19 +120,27 @@ public class TrelloConnect implements Connection {
 		this.labels = labels;
 		TextField[] textFields = { login, accessToken, cardBoard };
 		this.textFields = textFields;
-		
-		//assumeData();
+
+		assumeData();
 	}
-	
+
 	/**
 	 * Uses data inserted by the user as login instances.
+	 * 
+	 * @throws IOException
 	 */
-	private void assumeData() {
-		accessKey = textFields[0].getText();
-		accessToken = textFields[1].getText();
-		boardName = textFields[2].getText();
+	@Override
+	public void assumeData() throws IOException {
+//		accessKey = textFields[0].getText();
+//		accessToken = textFields[1].getText();
+//		boardName = textFields[2].getText();
+		connectTo();
+
+		System.out.println("Access Key: " + accessKey);
+		System.out.println("Access Token: " + accessToken);
+		System.out.println("Board Name: " + boardName);
 	}
-	
+
 	/**
 	 * Establish connection to Trello.
 	 * 
@@ -149,64 +153,173 @@ public class TrelloConnect implements Connection {
 	}
 
 	/**
-	 * Get Members from Trello.
+	 * Get description from Sprint Planning Meeting.
 	 * 
-	 * @param <code>boardName</code> Gives the name of the board where it has to go
-	 *                               get the members.
+	 * @param sprint Defines from which sprint we intend to get the planning
+	 *               description.
+	 * @return
 	 */
-	public void getMembers() {
+	public String getSprintPlanningDesc(TList sprint) {
+		Card c = getCardFromSprint("Sprint Planning", sprint.getName());
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+	}
+
+	/**
+	 * Get description from Sprint Review Meeting.
+	 * 
+	 * @param sprint Defines from which sprint we intend to get the review meeting
+	 *               description.
+	 * @return
+	 */
+	public String getSprintReviewDesc(TList sprint) {
+		Card c = getCardFromSprint(sprint.getName() + " - Sprint Review", "Sprint Review");
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+	}
+
+	/**
+	 * Get description from Sprint Retrospective Meeting.
+	 * 
+	 * @param sprint Defines from which sprint we intend to get the retrospective
+	 *               meeting description.
+	 * @return
+	 */
+	public String getSprintRetrospectiveDesc(TList sprint) {
+		Card c = getCardFromSprint(sprint.getName() + " - Sprint Retrospective", "Sprint Retrospective");
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+
+	}
+
+	/**
+	 * Get Members from Trello.
+	 */
+	public String getMembers() {
+		String result = "";
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
-		for (Board bd : allBoards) {
+		for (Board bd : allBoards)
 			if (bd.getName().equals(boardName)) {
 				board = trelloMvn.getBoard(bd.getId());
 				List<Member> boardMembers = board.fetchMembers();
 				for (Member m : boardMembers) {
-					//System.out.println("co"+m);
 					members.add(m);
-					System.out.println("Nome: " + m.getFullName() + " | Username: @" + m.getUsername());
+					result = result + "\nNome: " + m.getFullName() + " | Username: @" + m.getUsername();
 				}
+				return result;
 			}
-		}
+		return "ERROR: No members founds!";
 	}
-	
-	public void getSprints() {
+
+	/**
+	 * Updates the list of Trello's columns (Lists).
+	 */
+	private void getLists() {
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
-		for (Board bd : allBoards) {
+		for (Board bd : allBoards)
 			if (bd.getName().equals(boardName)) {
 				board = trelloMvn.getBoard(bd.getId());
 				List<TList> sprintsaux = trelloMvn.getBoardLists(board.getId());
-				for(TList list : sprintsaux) {
+				for (TList list : sprintsaux)
 					sprints.add(list);
-				}
 			}
-		}
 	}
-	
-	// vai buscar um sprint
+
+	/**
+	 * Returns a specific sprint.
+	 * 
+	 * @param sprintName Determines which one is the sprint, according to the name
+	 *                   of the list.
+	 * @return
+	 */
 	public TList getSprint(String sprintName) {
-		getSprints();
-		for(TList list : sprints) {
-			if(list.getName().equals(sprintName)) {
+		getLists();
+		for (TList list : sprints)
+			if (list.getName().contains(sprintName))
 				return list;
-			}
-		}
 		return null;
 	}
-	
-//	public void getCardsFromSprint(TList Sprint) {
-//		List<Card> cards = trelloMvn.getListCards(Sprint.getId());
-//		for (Card card : cards) {
-//			System.out.println(card.getName());
-//		}
-//	}
-	
-	// devolve uma lista de cartões de um sprint
-	public List<Card> listCardsSprint (TList Sprint){
-		List<Card> cards = trelloMvn.getListCards(Sprint.getId());
-		for (Card card : cards) {
+
+	/**
+	 * Returns the list of cards for one sprint.
+	 * 
+	 * @param sprint Determines from which sprint it will get the list of cards.
+	 * @return
+	 */
+	public List<Card> listCardsSprint(TList sprint) {
+		List<Card> cards = trelloMvn.getListCards(sprint.getId());
+		for (Card card : cards)
 			cardsSprint.add(card);
-		}
 		return cardsSprint;
+	}
+
+	/**
+	 * Returns a specific card from a specific sprint (TList).
+	 * 
+	 * @param cardName   Determines which one is the card.
+	 * @param sprintName Determines from which sprint.
+	 * @return
+	 */
+	public Card getCardFromSprint(String cardName, String sprintName) {
+		List<Card> aux = listCardsSprint(getSprint(sprintName));
+		for (Card c : aux)
+			if (c.getName().contains(cardName))
+				return c;
+		return null;
+	}
+
+	public List<String> getAllSprints() {
+		getLists();
+		List<String> result = new ArrayList<>();
+		// List<TList> aux = list
+		for (TList tl : sprints) {
+			// System.out.println("HUGO " + tl.getName());
+			String[] aux = tl.getName().split(" ");
+			if (aux.length > 1)
+				if (aux[1].contains("Sprint"))
+					if (!result.contains(tl.getName()))
+						result.add(tl.getName());
+
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the starting date of the sprint.
+	 * 
+	 * @param sprintName Determines from which sprint.
+	 * @return
+	 */
+	private Date getSprintStartDate(TList sprintName) {
+		String cardName = sprintName.getName() + " - Sprint Planning";
+		Card c = getCardFromSprint(cardName, sprintName.getName());
+		return c.getDue();
+	}
+
+	/**
+	 * Returns the ending date of the sprint.
+	 * 
+	 * @param sprintName Determines from which sprint.
+	 * @return
+	 */
+	private Date getSprintEndDate(TList sprintName) {
+		String cardName = sprintName.getName() + " - Sprint Review";
+		Card c = getCardFromSprint(cardName, "Sprint Review");
+		return c.getDue();
+	}
+
+	/**
+	 * Returns the information regarding to starting and ending date of the sprint.
+	 * 
+	 * @param sprintName Determines from which sprint.
+	 * @return
+	 */
+	public String getSprintDates(TList sprintName) {
+		return "Data inicio sprint: " + getSprintStartDate(sprintName) + "\nData fim sprint: "
+				+ getSprintEndDate(sprintName);
 	}
 
 /////////////////
@@ -215,6 +328,8 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello API.
+	 * 
+	 * @return
 	 */
 	public Trello getTrello() {
 		return trelloMvn;
@@ -230,9 +345,20 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get TrelloConnect layout.
+	 * 
+	 * @return
 	 */
 	public Layout getLayout() {
 		return layout;
+	}
+
+	/**
+	 * Get boardName.
+	 * 
+	 * @return
+	 */
+	public String getBoardName() {
+		return boardName;
 	}
 
 /////////////////
@@ -256,26 +382,4 @@ public class TrelloConnect implements Connection {
 //		for (Card card : cards)
 //			System.out.println(card.getId() + ":" + card.getName());
 	}
-
-//	MAIN DE TESTE
-//	
-//	public static void main(String[] args) {
-//		//TrelloDetails td = new TrelloDetails(null);
-//		Trello trelloApi = new TrelloImpl("61d79cb5bcc75c155c7fd74aef6f1b4f", "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118", new ApacheHttpClient());
-//		//List <Board> b = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
-//		List <Board> boards = trelloApi.getMemberBoards("me", new Argument("fields", "name"));
-//		for (Board board : boards) {
-//		    board.getName();
-//		    board.getId();
-//		    System.out.println(board.getId() + ":" + board.getName());
-//		    List <TList> lists = trelloApi.getBoardLists(board.getId());
-//		    for (TList list : lists) {
-//		        System.out.println(list.getId() + ":" + list.getName());
-//		        List <Card> cards = trelloApi.getListCards(list.getId());
-//		        for (Card card : cards) {
-//		            System.out.println(card.getId() + ":" + card.getName());
-//		        }
-//		    }
-//		}
-//	}
 }

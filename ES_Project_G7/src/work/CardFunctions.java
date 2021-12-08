@@ -43,13 +43,21 @@ public abstract class CardFunctions implements Times {
 		this.setDueDate((Date) card.getDue());
 	}
 
-	///// descobrir funcao pa obter lista de tarefas do backlog
+	/**
+	 * Set backlog tasklist
+	 * 
+	 * @param tasklist
+	 */
 	private void setbacklogtasklist(List<Card> tasklist) {
-		// ver comando lista tasks productbacklog pra ja fica este
+
 		tasklist = new ArrayList<>();
 	}
 
 	@Override
+	/**
+	 * check timespent
+	 * 
+	 */
 	public boolean hasTimeSpent() {
 		if (getTimeSpent() == 0)
 			return false;
@@ -68,7 +76,7 @@ public abstract class CardFunctions implements Times {
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember)  {
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
 		return false;
 	}
 
@@ -118,9 +126,9 @@ public abstract class CardFunctions implements Times {
 	}
 
 	public void setMembersIDs(Card card) {
-		//		for (Member m : trello.getCardMembers(card.getId())) {
-		//			this.membersIDs.add(m.getId());
-		//		}
+		// for (Member m : trello.getCardMembers(card.getId())) {
+		// this.membersIDs.add(m.getId());
+		// }
 		members = trello.getCardMembers(card.getId());
 	}
 
@@ -129,11 +137,9 @@ public abstract class CardFunctions implements Times {
 		return timeSpent;
 	}
 
-
-
-
-
+	public double membergetTimeEstimated(String memberUsername, Card card, String idmember) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }
-
-

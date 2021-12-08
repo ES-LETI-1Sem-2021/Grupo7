@@ -44,13 +44,13 @@ public class Hours implements MemberTimes {
 		for(Action a: trello.getCardActions(this.getCardId())) {
 			if(a.getData().getText()!=null) {
 				if(a.getIdMemberCreator().equals(membro.getId())) {
-				String data=a.getData().getText();
-				if(!data.contains("@global")) {
-				String [] auxiliar=data.split("/");
-				String [] auxiliar2=auxiliar[0].split("!");
-				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
-			}
-		}}}
+					String data=a.getData().getText();
+					if(!data.contains("@global")) {
+						String [] auxiliar=data.split("/");
+						String [] auxiliar2=auxiliar[0].split("!");
+						timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
+					}
+				}}}
 
 		return timeSpent;
 	}
@@ -58,22 +58,19 @@ public class Hours implements MemberTimes {
 
 	@Override
 	public double membergetTimeEstimated() {
-		///////////////////////////////////////////////
-		//Obter tempo estimado
-
-
 		for(Action a: trello.getCard(card.getId()).getActions()) {
-
 			String data=a.getData().getText();
 			if (data != null){
 				if(!data.contains("@global")) {
-				String [] auxiliar=data.split("/");
-				String [] auxiliar2=auxiliar[0].split("!");
-				timeSpent=timeSpent+Double.parseDouble(auxiliar2[1]);
-			}
-		}}
+					String [] auxiliar=data.split("/");
+					String [] auxiliar2=auxiliar[1].split(" ");
+					timeSpent=timeSpent+Double.parseDouble(auxiliar2[0]);
 
-		return timeEstimated;
+				}
+			}
+		}
+
+		return timeSpent;
 	}
 
 	public String getCardId() {

@@ -12,22 +12,29 @@ import data.TrelloConnect;
 import gui.MainWindow;
 
 public class ProductBacklog extends CardFunctions {
-	private  TrelloConnect trelloconnect=MainWindow.getFrame().getTrelloConnect();
-	private Trello trello= trelloconnect.getTrello();
+	private TrelloConnect trelloconnect = MainWindow.getFrame().getTrelloConnect();
+	private Trello trello = trelloconnect.getTrello();
 	private List<Card> taskList;
 
-
 	public ProductBacklog() {
-		super ();	
-		
+		super();
+
 	}
+
+	/**
+	 * Tasklist of a sprint
+	 * 
+	 * @param sprintName
+	 */
 	public void getListtarefa(String sprintName) {
-		this.taskList=trelloconnect.listCardsSprint(trelloconnect.getSprint(sprintName));
+		this.taskList = trelloconnect.listCardsSprint(trelloconnect.getSprint(sprintName));
 	}
+
 	@Override
+
 	public double getTimeSpent() {
 		double timeSpent = 0;
-	//	getListtarefa(");
+		// getListtarefa(");
 		for (Card c : this.taskList) {
 			Task t = new Task(c);
 			if (t.hasTimeSpent())
@@ -47,21 +54,21 @@ public class ProductBacklog extends CardFunctions {
 	}
 
 	@Override
-	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember){
+	public boolean memberhasTimeSpent(String memberUsername, Card card, String idmember) {
 
-		if (membergetTimeSpent(memberUsername,card,idmember) == 0)
+		if (membergetTimeSpent(memberUsername, card, idmember) == 0)
 			return false;
 		else
 			return true;
 	}
 
 	@Override
-	public double  membergetTimeSpent(String memberUsername, Card card, String idmember) {
+	public double membergetTimeSpent(String memberUsername, Card card, String idmember) {
 		double timeSpent = 0;
 		for (Card c : this.taskList) {
 			Task t = new Task(c);
 			if (t.hasTimeSpent())
-				timeSpent += t.membergetTimeSpent(memberUsername,card,idmember);
+				timeSpent += t.membergetTimeSpent(memberUsername, card, idmember);
 		}
 		return timeSpent;
 
@@ -70,7 +77,7 @@ public class ProductBacklog extends CardFunctions {
 	@Override
 	public double membergetTimeEstimated(String memberUsername) {
 		double estimatedTime = 0;
-		for (Card c: this.taskList) {
+		for (Card c : this.taskList) {
 			Task t = new Task(c);
 			estimatedTime += t.membergetTimeEstimated(memberUsername);
 		}
