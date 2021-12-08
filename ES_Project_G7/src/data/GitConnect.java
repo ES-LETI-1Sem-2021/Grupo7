@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.kohsuke.github.*;
 
@@ -104,7 +106,6 @@ public class GitConnect implements Connection {
 		this.labels = labels;
 		TextField[] textFields = { accessToken, projectOwner, repository };
 		this.textFields = textFields;
-		
 	}
 
 	/**
@@ -133,7 +134,6 @@ public class GitConnect implements Connection {
 	public void connectTo() throws IOException {
 		gitMvn = new GitHubBuilder().withOAuthToken(accessToken).build();
 		gitRepo = gitMvn.getRepository(getRepositoryName());
-//		System.out.println(getProjectDescription());
 		connected = true;
 	}
 
@@ -209,7 +209,7 @@ public class GitConnect implements Connection {
 	 * 
 	 * @return
 	 */
-	private String getRepositoryName() {
+	public String getRepositoryName() {
 		return projectOwner + "/" + repository;
 	}
 
@@ -223,13 +223,22 @@ public class GitConnect implements Connection {
 	}
 
 	/**
+	 * Gets project identification from GithubRepo's name.
+	 * 
+	 * @return
+	 */
+	public String getProjectIentification() {
+		return gitRepo.getName();
+	}
+
+	/**
 	 * Get from GitHub's repository the project description.
 	 * 
 	 * @return
 	 * @throws IOException
 	 */
-	private String getProjectDescription() throws IOException {
-		return gitRepo.getFileContent("README.md").getContent();
+	public String[] getProjectDescription() throws IOException {
+		return gitRepo.getFileContent("README.md").getContent().split("\n");
 	}
 
 	/**
@@ -257,20 +266,53 @@ public class GitConnect implements Connection {
 	 * 
 	 * @throws IOException
 	 */
-	public void getTagsWithDate() throws IOException {
-		for (GHTag gt : getTagsFromMaster())
-			System.out.println("Nome tag: " + gt.getName() + "\n" + "Data Criada: " + gt.getOwner().getCreatedAt());
+	public String[] getTagsWithDate() throws IOException {
+		String[] tagsAndDates = new String[getTagsFromMaster().size()];
+		for (GHTag gt : getTagsFromMaster()) {
+			int i = 0;
+			tagsAndDates[i] = "Nome tag: " + gt.getName() + " | " + "Data Criada: " + gt.getOwner().getCreatedAt();
+			i++;
+		}
+		return tagsAndDates;
 	}
 
-	/**
-	 * Get from GitHub's repository the commits' list.
-	 * 
-	 * @throws IOException
-	 */
-	public void getCommits() throws IOException {
-		List<GHCommit> list = gitRepo.listCommits().asList();
-		for (GHCommit g : list)
-			System.out.println("Data Commit: " + g.getCommitDate() + " Autor: " + g.getAuthor().getName()
-					+ " Descrição: " + g.getCommitShortInfo().getMessage());
+//	/**
+//	 * Get from GitHub's repository the commits' list.
+//	 * 
+//	 * @throws IOException
+//	 */
+//	public void getCommits() throws IOException {
+//		System.out.println("-------------------------------------------------");
+//		commitsFromUser("mapa95");
+//		List<GHCommit> list = gitRepo.listCommits().asList();
+//		for (GHCommit g : list)
+//			System.out.println("Data Commit: " + g.getCommitDate() + " Autor: " + g.getAuthor().getName()
+//					+ " Descrição: " + g.getCommitShortInfo().getMessage());
+//	}
+
+	private void getBranches() throws IOException {
+		Map<String, GHBranch> map = gitRepo.getBranches();
+		for (Entry<String, GHBranch> entry : map.entrySet()) {
+			System.out.println(entry.getValue().getName());
+		}
+	}
+
+	public String[] commitsFromUser(String username) throws IOException {
+
+//		Set<GHUser> names = gitRepo.getCollaborators();
+//		for(GHUser g : names)
+//			System.out.println(g.getLogin());
+
+		List<GHCommit> list = gitRepo.listCommits().toList();
+		String[] result = new String[list.size()];
+		for (GHCommit g : list) {
+			int i = 0;
+			if (g.getAuthor().getLogin().equals(username) && g.getAuthor().getName() != null) {
+				result[i] = ("Commit Date: " + g.getCommitDate() + " Author: " + g.getAuthor().getName()
+						+ " Description: " + g.getCommitShortInfo().getMessage());
+			}
+			i++;
+		}
+		return result;
 	}
 }

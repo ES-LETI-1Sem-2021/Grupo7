@@ -1,6 +1,8 @@
 package gui;
 
 import java.io.IOException;
+import java.util.Date;
+
 import javax.swing.*;
 
 import com.julienvey.trello.domain.Member;
@@ -23,6 +25,8 @@ public class MainWindow extends JFrame {
 	private static final int Y_LOCATION = 150;
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
+	private static final int BTN_LEFT = 50;
+	private static final int BTN_RIGHT = BTN_LEFT+50;
 
 	private TrelloConnect trello;
 	private GitConnect github;
@@ -72,9 +76,11 @@ public class MainWindow extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
+		
+		
 		trello = new TrelloConnect(this.getContentPane());
 		github = new GitConnect(trello.getLayout());
-
+		
 		JButton submit = new JButton("SUBMIT");
 		submit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -110,7 +116,11 @@ public class MainWindow extends JFrame {
 		githubBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clearPage();
-				githubWindow();
+				try {
+					githubWindow();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		layout.addToGridLayout(githubBtn);
@@ -197,26 +207,42 @@ public class MainWindow extends JFrame {
 //GitHub view
 ////////////////
 
-	private void githubWindow() {
+	private void githubWindow() throws IOException {
 		defineWindow(0, 0);
 		layout = new Layout(LayoutType.LAYOUT_SPRING, this.getContentPane());
 
-		// data de início do projeto - getProjectStartDate
+		TextLabel projectName = new TextLabel(github.getProjectIentification(), 15, FontType.FONT_TITLE);
+		layout.addToSpringLayout_xCentered(projectName, 15);
+		TextLabel startingDate = new TextLabel("Created at " + github.getProjectStartDate().toString(), 13, FontType.FONT_BOLD);
+		layout.addToSpringLayout_xCentered(startingDate, 40);		
+		addStringsToLayout(github.getProjectDescription(), 65);
+//		addStringsToLayout(github.getTagsWithDate(), 60);
+//		commits();
 		
 		buttonToChooseView();
 		setVisible(true);
 	}
 
-	private void readME() {
-
-	}
-
-	private void tags() {
-		//getTagsWithDate
-	}
-
 	private void commits() {
-
+		
+//		JButton getCommits = new JButton("GET COMMITS");
+//		layout.addToSpringLayout(getCommits, BTN_LEFT, 100);
+//		getCommits.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				String username = JOptionPane.showInputDialog(null, "Insert your username here:", "GitHub Username", JOptionPane.PLAIN_MESSAGE);
+//				if (username.equals(""))
+//					throw new NullPointerException("Please insert a valid name.");
+//				try {
+//					clearPage();
+//					JPanel container = new JPanel();
+//					JScrollPane scrPane = new JScrollPane(container);
+//					FRAME.getContentPane().add(scrPane);
+//					addStringsToLayout(github.commitsFromUser(username), 15);
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+//			}
+//		});
 	}
 
 /////////////////
