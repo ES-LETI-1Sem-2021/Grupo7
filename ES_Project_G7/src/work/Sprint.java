@@ -66,6 +66,8 @@ public class Sprint implements Times {
 	 * Check timespent of a sprint
 	 * 
 	 * @param sprintName
+	 *  
+	 * @return
 	 */
 	public boolean hasTimeSpent(String sprintName) {
 		if (getTimeSpent(sprintName) == 0)
@@ -79,6 +81,7 @@ public class Sprint implements Times {
 	 * Get timespent of a sprint
 	 * 
 	 * @param sprintName
+	 * @return
 	 */
 	public double getTimeSpent(String sprintName) {
 		double timeSpent = 0;
@@ -103,6 +106,7 @@ public class Sprint implements Times {
 	 * Get estimated times of a sprint
 	 * 
 	 * @param sprintName
+	 * @return
 	 */
 	public double getTimeEstimated(String sprintName) {
 		double timeSpent = 0;
@@ -129,6 +133,7 @@ public class Sprint implements Times {
 	 * @param memberUsername
 	 * @param idmember
 	 * @param sprintName
+	 * @return
 	 * 
 	 */
 	public double membergetTimeEstimated(String memberUsername, String idmember, String sprintName) {
@@ -160,7 +165,7 @@ public class Sprint implements Times {
 	 * @param memberUsername
 	 * @param idmember
 	 * @param sprintName
-	 * 
+	 * @return
 	 */
 	public double membergetTimeSpent(String memberUsername, String idmember, String sprintName) {
 
