@@ -296,7 +296,7 @@ public class GitConnect implements Connection {
 //		List<GHCommit> list = gitRepo.listCommits().asList();
 //		for (GHCommit g : list)
 //			System.out.println("Data Commit: " + g.getCommitDate() + " Autor: " + g.getAuthor().getName()
-//					+ " Descrição: " + g.getCommitShortInfo().getMessage());
+//					+ " Descriï¿½ï¿½o: " + g.getCommitShortInfo().getMessage());
 //	}
 
 	private void getBranches() throws IOException {

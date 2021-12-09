@@ -18,7 +18,8 @@ import com.julienvey.trello.impl.http.ApacheHttpClient;
 import gui.MainWindow;
 
 class GitConnectJUnitCase {
-	private String accessToken = "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"; // aram
+	private String accessToken = "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";// "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";
+																			// // aram
 	private String projectOwner = "mapa95";
 	private String repository = "ES-LETI-1Sem-2021-Grupo7";
 	private GitHub github;
@@ -45,7 +46,7 @@ class GitConnectJUnitCase {
 		assertEquals(github, git_test);
 		assertNotNull(gitRepo);
 		assertEquals(gitRepo, gitRepotest);
-	} 
+	}
 
 	@Test
 	public void testgetProjectStartDate() throws Exception {
@@ -63,7 +64,7 @@ class GitConnectJUnitCase {
 //				+ "Trabalho realizado no �mbito da UC de Engenharia de Software:\r\n" + "- Gabriel Monteiro (92458)\r\n"
 //				+ "- Hugo Santos (92585)\r\n" + "- Tiago Almeida (92985)\r\n" + "- Mara Alves (94013)";
 
-		String string2 = "# ES-LETI-1Sem-2021-Grupo7\r\n"
+		String string2 = "ES-LETI-1Sem-2021-Grupo7\r\n"
 				+ "Trabalho realizado no âmbito da UC de Engenharia de Software:\r\n" + "\r\n"
 				+ "Gabriel Monteiro (92458)\r\n" + "Hugo Santos (92585)\r\n" + "Tiago Almeida (92985)\r\n"
 				+ "Mara Alves (94013)\r\n" + "Não foi possível integrar os seguintes elementos:\r\n" + "\r\n"
