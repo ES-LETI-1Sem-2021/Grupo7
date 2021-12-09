@@ -172,91 +172,115 @@ public class MainWindow extends JFrame {
 		setVisible(true);
 	}
 
-	private void trelloWindow(String sprintName) {
-		defineWindow(0, 0);
-		layout = new Layout(LayoutType.LAYOUT_SPRING, this.getContentPane());
-		trelloSprintOptions(sprintName);
-		buttonToChooseView();
-		setVisible(true);
-	}
-
 	/**
 	 * Displays in the window: sprint dates.
 	 * 
 	 * @param sprintName
 	 */
-	private void trelloSprintOptions(String sprintName) {
+	private void trelloWindow(String sprintName) {
+		clearPage();
+		defineWindow(0, 0);
+//		setExtendedState(getExtendedState() | MAXIMIZED_BOTH);
+		layout = new Layout(LayoutType.LAYOUT_SPRING, this.getContentPane());
+		
 		TList sprint = trello.getSprint(sprintName);
 
 		layout.addToSpringLayout_xCentered(new TextLabel(sprintName, 10, FontType.FONT_TITLE), 15);
-
-		JButton sprintPlann = new JButton("CHECK PLANNING");
-		layout.addToSpringLayout(sprintPlann, 400, 100);
-		sprintPlann.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showConfirmDialog(null, trello.getSprintPlanningDesc(sprint),
-						sprintName + " | Sprint Planning", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
-			}
-		});
-
-		JButton sprintReview = new JButton("CHECK REVIEW");
-		layout.addToSpringLayout_xCentered(sprintReview, 400);
-		sprintReview.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showConfirmDialog(null, trello.getSprintReviewDesc(sprint), sprintName + " | Sprint Review",
-						JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
-			}
-		});
-
-		JButton sprintRetrospective = new JButton("CHECK RETROSPECTIVE");
-		layout.addToSpringLayout(sprintRetrospective, 400, 600);
-		sprintRetrospective.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showConfirmDialog(null, trello.getSprintRetrospectiveDesc(sprint),
-						sprintName + " | Sprint Retrospective", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE);
-			}
-		});
-
-		getTasks(sprint);
-		showTimePerSprint(sprintName);
-		showEstimatedTimePerSprint(sprintName);
-		showHumanitaryCostPerSprint(sprintName);
-		addStringsToLayout(trello.getPBEachSprint(sprint), 250);
 		
+		getTasks(sprint);
+
+		addTimes(sprintName);
+		addSprintDescriptions(sprintName);
+		buttonToChooseView();
 		
 		setVisible(true);
 	}
 
+	private void addTimes(String sprintName) {
+		JButton timePerSprint = new JButton("Time per Sprint");
+		timePerSprint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showTimePerSprint(sprintName);
+			}
+		});
+		
+		JButton estimatedTimePerSprint = new JButton("Estimated time per Sprint");
+		estimatedTimePerSprint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showEstimatedTimePerSprint(sprintName);
+			}
+		});
+		
+		JButton humanitaryCostPerSprint = new JButton("Humanitary Cost per Sprint");
+		humanitaryCostPerSprint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showHumanitaryCostPerSprint(sprintName);
+			}
+		});
+		
+		layout.addToSpringLayout(timePerSprint, -250, 400);
+		layout.addToSpringLayout_xCentered(estimatedTimePerSprint, 400);
+		layout.addToSpringLayout(humanitaryCostPerSprint, 125, 400);
+	}
+	
+	private void addSprintDescriptions(String sprintName) {
+		TList sprint = trello.getSprint(sprintName);
+		
+		JButton sprintPlann = new JButton("SPRINT PLANNING");
+		sprintPlann.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintPlanningDesc(sprint),
+						sprintName + " | Sprint Planning", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		JButton sprintReview = new JButton("SPRINT REVIEW");
+		sprintReview.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintReviewDesc(sprint), sprintName + " | Sprint Review",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		JButton sprintRetrospective = new JButton("SPRINT RETROSPECTIVE");
+		sprintRetrospective.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showConfirmDialog(null, trello.getSprintRetrospectiveDesc(sprint),
+						sprintName + " | Sprint Retrospective", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+
+		layout.addToSpringLayout(sprintPlann, -250, 450);
+		layout.addToSpringLayout_xCentered(sprintReview, 450);
+		layout.addToSpringLayout(sprintRetrospective, 100, 450);
+	}
+	
 	private void showTimePerSprint(String sprintName) {
 		SwingUtilities.invokeLater(() -> {
-			PieChartTimeporSprint example = new PieChartTimeporSprint("Tempo por Sprint", sprintName);
-			example.setSize(800, 400);
-			example.setLocationRelativeTo(null);
-			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			example.setVisible(true);
-
+			PieChartTimeporSprint timePerSprint = new PieChartTimeporSprint("Tempo por Sprint", sprintName);
+			timePerSprint.setSize(800, 400);
+//			timePerSprint.setLocationRelativeTo(null);
+			timePerSprint.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			timePerSprint.setVisible(true);
 		});
 	}
 	
 	private void showEstimatedTimePerSprint(String sprintName) {
 		SwingUtilities.invokeLater(() -> {
-			PieChartEstimatedTimeporSprint example = new PieChartEstimatedTimeporSprint("Tempo estimado por Sprint", sprintName);
-			example.setSize(800, 400);
-			example.setLocationRelativeTo(null);
-			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			example.setVisible(true);
-
+			PieChartEstimatedTimeporSprint estimatedTimePerSprint = new PieChartEstimatedTimeporSprint("Tempo estimado por Sprint", sprintName);				estimatedTimePerSprint.setSize(800, 400);
+//			estimatedTimePerSprint.setLocationRelativeTo(null);
+			estimatedTimePerSprint.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			estimatedTimePerSprint.setVisible(true);
 		});
 	}
 	
 	private void showHumanitaryCostPerSprint(String sprintName) {
 		SwingUtilities.invokeLater(() -> {
-			HumanitaryCost example = new HumanitaryCost("Custo do Sprint", sprintName);
-			example.setSize(800, 400);
-			example.setLocationRelativeTo(null);
-			example.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			example.setVisible(true);
-
+			HumanitaryCost humanitaryCostPerSprint = new HumanitaryCost("Custo do Sprint", sprintName);
+			humanitaryCostPerSprint.setSize(800, 400);
+//			timePerSprint.setLocationRelativeTo(null);
+			humanitaryCostPerSprint.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			humanitaryCostPerSprint.setVisible(true);
 		});
 	}
 
@@ -300,8 +324,8 @@ public class MainWindow extends JFrame {
 		setVisible(true);
 	}
 
-	private void commits() {
-
+//	private void commits() {
+//
 //		JButton getCommits = new JButton("GET COMMITS");
 //		layout.addToSpringLayout(getCommits, BTN_LEFT, 100);
 //		getCommits.addActionListener(new ActionListener() {
@@ -320,7 +344,7 @@ public class MainWindow extends JFrame {
 //				}
 //			}
 //		});
-	}
+//	}
 
 /////////////////
 //Getters & Setters

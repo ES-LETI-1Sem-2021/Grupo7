@@ -31,9 +31,9 @@ public class TrelloConnect implements Connection {
 	private List<Card> cardsSprint = new ArrayList<>();
 
 	// DataTest - Tiago
-	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
-	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-	private String boardName = "ES Project";
+	private String accessKey;// = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String accessToken;// = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
+	private String boardName;// = "ES Project";
 
 /////////////////
 //Constructors
@@ -66,7 +66,7 @@ public class TrelloConnect implements Connection {
 	}
 
 /////////////////
-//Methods
+//Implementation
 ////////////////
 
 	/**
@@ -75,9 +75,10 @@ public class TrelloConnect implements Connection {
 	 * @param pane Uses a <code>Container</code> as base to define where will be
 	 *             created the new <code>Layout</code> (which is the layout
 	 *             instance).
+	 * @throws IOException
 	 */
 	@Override
-	public void getDataLayout(Container pane) {
+	public void getDataLayout(Container pane) throws IOException {
 		getData();
 		layout = new Layout(LayoutType.LAYOUT_SPRING, pane, title, labels, textFields, STARTING_POINT);
 	}
@@ -88,9 +89,10 @@ public class TrelloConnect implements Connection {
 	 * @param layout Uses a <code>Layout</code> as base to define where will be
 	 *               added the <code>getData()</code> function and defines it as the
 	 *               layout instance.
+	 * @throws IOException
 	 */
 	@Override
-	public void getDataLayout(Layout layout) {
+	public void getDataLayout(Layout layout) throws IOException {
 		getData();
 		this.layout = layout;
 
@@ -100,9 +102,11 @@ public class TrelloConnect implements Connection {
 
 	/**
 	 * Get Trello data from user in order to establish connection.
+	 * 
+	 * @throws IOException
 	 */
 	@Override
-	public void getData() {
+	public void getData() throws IOException {
 		title = new TextLabel("Login Trello", 15, FontType.FONT_TITLE);
 		TextLabel user_lab = new TextLabel("Access Key: ", 15, FontType.FONT_BOLD);
 		TextField login = new TextField();
@@ -124,9 +128,9 @@ public class TrelloConnect implements Connection {
 	 */
 	@Override
 	public void assumeData() throws IOException {
-//		accessKey = textFields[0].getText();
-//		accessToken = textFields[1].getText();
-//		boardName = textFields[2].getText();
+		accessKey = textFields[0].getText();
+		accessToken = textFields[1].getText();
+		boardName = textFields[2].getText();
 		connectTo();
 
 		System.out.println("Access Key: " + accessKey);
@@ -146,9 +150,72 @@ public class TrelloConnect implements Connection {
 	}
 
 	/**
+	 * Get description from Sprint Planning Meeting.
+	 * 
+	 * @param sprint Defines from which sprint we intend to get the planning
+	 *               description.
+	 * @return
+	 */
+	public String getSprintPlanningDesc(TList sprint) {
+		Card c = getCardFromSprint("Sprint Planning", sprint.getName());
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+	}
+
+	/**
+	 * Get description from Sprint Review Meeting.
+	 * 
+	 * @param sprint Defines from which sprint we intend to get the review meeting
+	 *               description.
+	 * @return
+	 */
+	public String getSprintReviewDesc(TList sprint) {
+		Card c = getCardFromSprint(sprint.getName() + " - Sprint Review", "Sprint Review");
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+	}
+
+	/**
+	 * Get description from Sprint Retrospective Meeting.
+	 * 
+	 * @param sprint Defines from which sprint we intend to get the retrospective
+	 *               meeting description.
+	 * @return
+	 */
+	public String getSprintRetrospectiveDesc(TList sprint) {
+		Card c = getCardFromSprint(sprint.getName() + " - Sprint Retrospective", "Sprint Retrospective");
+		if (c.getDesc() != "")
+			return c.getDesc();
+		return "ERROR: No description found!!";
+
+	}
+
+	/**
+	 * Get Product Backlog items from a sprint.
+	 * @param sprint
+	 * @return
+	 */
+	public String[] getPBEachSprint(TList sprint){
+		String[] pb = new String[500];
+		int i=0;
+		for(Card c : listCardsSprint(sprint)) {
+			if(c.getName().contains("#PB")) {
+				String [] vec = c.getName().split(" ");
+				String s = vec[vec.length-1];
+				pb[i]=s;
+				i++;
+			}
+		}
+		return pb; 
+	}
+	
+	/**
 	 * Get Members from Trello.
 	 */
 	public String getMembers() {
+		String result = "";
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
 		for (Board bd : allBoards)
 			if (bd.getName().equals(boardName)) {
@@ -156,16 +223,17 @@ public class TrelloConnect implements Connection {
 				List<Member> boardMembers = board.fetchMembers();
 				for (Member m : boardMembers) {
 					members.add(m);
-					return "Nome: " + m.getFullName() + " | Username: @" + m.getUsername();
+					result = result + "\nNome: " + m.getFullName() + " | Username: @" + m.getUsername();
 				}
+				return result;
 			}
-		return "Não foram encontrados membros.";
+		return "ERROR: No members founds!";
 	}
 
 	/**
 	 * Updates the list of Trello's columns (Lists).
 	 */
-	private void getSprints() {
+	private void getLists() {
 		List<Board> allBoards = trelloMvn.getMemberBoards("me", new Argument("fields", "name"));
 		for (Board bd : allBoards)
 			if (bd.getName().equals(boardName)) {
@@ -173,6 +241,7 @@ public class TrelloConnect implements Connection {
 				List<TList> sprintsaux = trelloMvn.getBoardLists(board.getId());
 				for (TList list : sprintsaux)
 					sprints.add(list);
+				
 			}
 	}
 
@@ -184,7 +253,7 @@ public class TrelloConnect implements Connection {
 	 * @return
 	 */
 	public TList getSprint(String sprintName) {
-		getSprints();
+		getLists();
 		for (TList list : sprints)
 			if (list.getName().contains(sprintName))
 				return list;
@@ -192,7 +261,7 @@ public class TrelloConnect implements Connection {
 	}
 
 	/**
-	 * Returns the list of cards for one sprint.
+	 * Returns the list of cards for ones sprint.
 	 * 
 	 * @param sprint Determines from which sprint it will get the list of cards.
 	 * @return
@@ -217,6 +286,25 @@ public class TrelloConnect implements Connection {
 			if (c.getName().contains(cardName))
 				return c;
 		return null;
+	}
+
+	/**
+	 * Get all the sprint lists.
+	 * @return
+	 */
+	public List<String> getAllSprints() {
+		getLists();
+		List<String> result = new ArrayList<>();
+		// List<TList> aux = list
+		for (TList tl : sprints) {
+			// System.out.println("HUGO " + tl.getName());
+			String[] aux = tl.getName().split(" ");
+			if (aux.length > 1)
+				if (aux[1].contains("Sprint"))
+					if (!result.contains(tl.getName()))
+						result.add(tl.getName());
+		}
+		return result;
 	}
 
 	/**
@@ -249,9 +337,11 @@ public class TrelloConnect implements Connection {
 	 * @param sprintName Determines from which sprint.
 	 * @return
 	 */
-	public String getSprintDates(TList sprintName) {
-		return "Data inicio sprint: " + getSprintStartDate(sprintName) + "\nData fim sprint: "
-				+ getSprintEndDate(sprintName);
+	public String [] getSprintDates(TList sprintName) {
+		String[] dates = new String[2];
+		dates[0] = "Sprint started at " + getSprintStartDate(sprintName);
+		dates[1] = "Sprint ended at " + getSprintEndDate(sprintName);
+		return dates;
 	}
 
 /////////////////
@@ -292,7 +382,15 @@ public class TrelloConnect implements Connection {
 	public String getBoardName() {
 		return boardName;
 	}
+	
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
 
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+	
 /////////////////
 //Testing
 ////////////////

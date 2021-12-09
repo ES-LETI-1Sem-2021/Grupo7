@@ -24,9 +24,9 @@ public class GitConnect implements Connection {
 	private TextField[] textFields;
 
 	// DataTest
-	private String accessToken = "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"; // ogait
-	private String projectOwner = "mapa95";
-	private String repository = "ES-LETI-1Sem-2021-Grupo7";
+	private String accessToken;// = "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"; // ogait
+	private String projectOwner;// = "mapa95";
+	private String repository;// = "ES-LETI-1Sem-2021-Grupo7";
 
 /////////////////
 //Constructors
@@ -115,9 +115,9 @@ public class GitConnect implements Connection {
 	 */
 	@Override
 	public void assumeData() throws IOException {
-//		accessToken = textFields[0].getText();
-//		projectOwner = textFields[1].getText();
-//		repository = textFields[2].getText();
+		accessToken = textFields[0].getText();
+		projectOwner = textFields[1].getText();
+		repository = textFields[2].getText();
 		connectTo();
 
 		System.out.println("Access Token: " + accessToken);
@@ -201,6 +201,15 @@ public class GitConnect implements Connection {
 	 */
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+	
+	/**
+	 * Set GitHub's accessToken to the current user logged in.
+	 * 
+	 * @param accessToken
+	 */
+	public void setRepository(String repository) {
+		this.repository = repository;
 	}
 
 	/**

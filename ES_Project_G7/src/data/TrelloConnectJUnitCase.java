@@ -23,32 +23,33 @@ class TrelloConnectJUnitCase {
 
 	private TrelloConnect trelloconnect;
 	private Trello trello;
-	private String accessKey;
-	private String accessToken;
-	private TList sprint;
+	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
+	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
+//	private TList sprint;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
-		accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-		TrelloConnect trelloconnect = MainWindow.getInstance().getTrelloConnect();
-		trello = trelloconnect.getTrello();
+		trelloconnect = MainWindow.getInstance().getTrelloConnect();
+		trelloconnect.setAccessKey(accessKey);
+		trelloconnect.setAccessToken(accessToken);
+		trelloconnect.connectTo();
 	}
 
 	@Test
 	public void testConnectTo() {
 		Trello trello_test = new TrelloImpl(accessKey, accessToken, new ApacheHttpClient());
-		assertNotNull(trello_test);
+		assertNotNull(trelloconnect);
 		assertEquals(trello, trello_test);
 	}
 
 	@Test
 	public void testGetMembers() {
 		assertNotNull(trelloconnect.getMembers());
+		System.out.println(trelloconnect.getMembers());
 		String members1 = trelloconnect.getMembers();
-		String members2 = "Nome: Gabriel Albuquerque Monteiro | Username: @gabrielalbuquerquemonteiro\r\n"
-				+ "Nome: Hugo Alexandre Silva Santos | Username: @hugoalexandresilvasantos\r\n"
-				+ "Nome: Mara Alves | Username: @maralvess\r\n" + "Nome: Tiago Almeida | Username: @tiagoalmeida01";
+		String members2 = "\nNome: Gabriel Albuquerque Monteiro | Username: @gabrielalbuquerquemonteiro"
+				+ "\nNome: Hugo Alexandre Silva Santos | Username: @hugoalexandresilvasantos"
+				+ "\nNome: Mara Alves | Username: @maralvess" + "\nNome: Tiago Almeida | Username: @tiagoalmeida01";
 		assertEquals(members1, members2);
 	}
 
