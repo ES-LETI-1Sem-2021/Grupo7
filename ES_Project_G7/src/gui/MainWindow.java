@@ -221,7 +221,7 @@ public class MainWindow extends JFrame {
 		layout.addToSpringLayout(timePerSprint, -250, 400);
 		layout.addToSpringLayout_xCentered(estimatedTimePerSprint, 400);
 		layout.addToSpringLayout(humanitaryCostPerSprint, 125, 400);
-	}
+	} 
 	
 	private void addSprintDescriptions(String sprintName) {
 		TList sprint = trello.getSprint(sprintName);

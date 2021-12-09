@@ -18,7 +18,7 @@ public class TextLabel extends JLabel {
 		super(text);
 		super.setFont(FontType.FONT_BOLD.getFont());
 		super.setBounds(15, y_Position, MainWindow.getHorizontalSize(), 30);
-	}
+	} 
 
 	public TextLabel(String text, int y_Position, FontType font) {
 		super(text);

@@ -45,7 +45,7 @@ class GitConnectJUnitCase {
 		assertEquals(github, git_test);
 		assertNotNull(gitRepo);
 		assertEquals(gitRepo, gitRepotest);
-	}
+	} 
 
 	@Test
 	public void testgetProjectStartDate() throws Exception {

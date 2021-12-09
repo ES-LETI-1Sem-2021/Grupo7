@@ -22,16 +22,17 @@ import gui.MainWindow;
 class TrelloConnectJUnitCase {
 
 	private TrelloConnect trelloconnect;
-	private Trello trello;
 	private String accessKey = "61d79cb5bcc75c155c7fd74aef6f1b4f";
 	private String accessToken = "c9802440801393a957373bf718d042ff7d4083befa43681de8d93f56282cc118";
-//	private TList sprint;
+	private String boardName = "ES Project";
+	//	private TList sprint;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		trelloconnect = MainWindow.getInstance().getTrelloConnect();
 		trelloconnect.setAccessKey(accessKey);
 		trelloconnect.setAccessToken(accessToken);
+		trelloconnect.setBoardName(boardName);
 		trelloconnect.connectTo();
 	}
 
@@ -39,7 +40,7 @@ class TrelloConnectJUnitCase {
 	public void testConnectTo() {
 		Trello trello_test = new TrelloImpl(accessKey, accessToken, new ApacheHttpClient());
 		assertNotNull(trelloconnect);
-		assertEquals(trello, trello_test);
+		assertEquals(trelloconnect.getTrello(), trello_test);
 	}
 
 	@Test

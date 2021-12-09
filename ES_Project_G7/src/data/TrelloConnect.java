@@ -206,7 +206,7 @@ public class TrelloConnect implements Connection {
 				String s = vec[vec.length-1];
 				pb[i]=s;
 				i++;
-			}
+			} 
 		}
 		return pb; 
 	}
@@ -228,7 +228,7 @@ public class TrelloConnect implements Connection {
 				return result;
 			}
 		return "ERROR: No members founds!";
-	}
+	} 
 
 	/**
 	 * Updates the list of Trello's columns (Lists).
@@ -389,6 +389,10 @@ public class TrelloConnect implements Connection {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+	
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
 	}
 	
 /////////////////

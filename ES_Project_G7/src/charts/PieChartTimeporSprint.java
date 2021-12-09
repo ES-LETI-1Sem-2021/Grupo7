@@ -44,7 +44,7 @@ public class PieChartTimeporSprint extends JFrame {
 	public PieChartTimeporSprint(String title, String sprintname) {
 		super(title);
 		this.name1 = sprintname;
-		// Create dataset
+		// Create dataset 
 		TrelloConnect trelloconnect = MainWindow.getFrame().getTrelloConnect();
 
 		this.dataset = createDataset();

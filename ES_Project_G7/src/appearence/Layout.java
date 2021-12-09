@@ -11,7 +11,7 @@ public class Layout extends JPanel {
 
 	private LayoutType layoutType;
 	private Object layout;
-	private Container pane;
+	private Container pane; 
 
 	private static final int LEFT_SPACE = 5;
 	private static final int SPACE_TO_FIELD = 150;
@@ -22,7 +22,7 @@ public class Layout extends JPanel {
 		this.pane = pane;
 		this.layoutType = layoutType;
 		createLayout();
-	}
+	} 
 
 	/**
 	 * Create a Layout from scratch.

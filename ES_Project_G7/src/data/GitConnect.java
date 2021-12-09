@@ -87,7 +87,7 @@ public class GitConnect implements Connection {
 
 		if (layout.getLayoutType() == LayoutType.LAYOUT_SPRING)
 			this.layout.addToSpringLayout(title, labels, textFields, STARTING_POINT);
-	}
+	} 
 
 	/**
 	 * Get GitHub data from user in order to establish connection.
