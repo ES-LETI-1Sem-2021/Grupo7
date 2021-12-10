@@ -17,3 +17,6 @@ Funcionalidades incompletas:
 
 Problemas de implementação:
 - Apesar de se ter chegado a uma solução mediana para a janela, o grupo continuou a deparar-se com vários (pelo menos aparentes) _bugs_ o que acabou por levar a várias horas perdidas na pesquisa de uma forma de os resolver.
+
+
+Demonstração
