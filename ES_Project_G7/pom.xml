@@ -20,6 +20,12 @@
 	</build>
 	<name>ES_LETI_G7</name>
 	<url>https://github.com/mapa95/ES-LETI-1Sem-2021-Grupo7</url>
+	
+	<properties>
+	  <sonar.organization>es-leti-1sem-2021</sonar.organization>
+	  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.kohsuke</groupId>
